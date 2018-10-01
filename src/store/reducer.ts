@@ -20,13 +20,14 @@ const reducerMap = {
     },
     [REMOVE_VARIABLE]: (state: DecisionTableState, action: Action<IDecisionVariable>): DecisionTableState => {
         const e = action.payload!;
-        const removedArray = state.decisionVariables.slice(e.index, 1);
+        const removedArray = [...state.decisionVariables];
+        removedArray.splice(e.index, 1);
         const decisionVariables = removedArray.map((d, i) => {
             d.index = i;
             return d;
         });
         const matrix = DecisionTableData.createMatrix(decisionVariables);        
-        const columnsVisible = state.columnsVisible.splice(e.index, 1);
+        const columnsVisible = matrix[0].map(() =>true);
         return { ...state, decisionVariables, matrix, columnsVisible };
     },
     [TOGGLE_COLUMN]: (state: DecisionTableState, action: Action<number>): DecisionTableState => {

@@ -16,7 +16,7 @@ export type TOGGLE_COLUMN = typeof TOGGLE_COLUMN;
 
 export const addVariable = createAction<IDecisionVariable, number>(
     ADD_VARIABLE,
-    (index: number) =>  new DecisionVariableBoolean(index, "New")
+    (index: number) =>  new DecisionVariableBoolean(index, String.fromCharCode('A'.charCodeAt(0) + index))
 )
 
 export const clear = createAction<void>(

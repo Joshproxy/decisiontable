@@ -10,3 +10,23 @@ table, th, td {
 .var-label {
   background-color: azure;
 }
+
+.result-row {
+  background-color: lightgray;
+}
+
+.success {
+  color: green;
+}
+
+.failure {
+  color: red;
+}
+
+.toggle-button {
+  width: 25px;
+}
+
+.column-hidden {
+  background-color: black;
+}

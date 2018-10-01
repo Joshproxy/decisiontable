@@ -27,8 +27,9 @@ class DecisionTableCreator extends React.Component<IDecisionTableCreatorProps, D
     }
 
     public render() {
+        const vars = [...this.props.data.decisionVariables];
         const add = () => {
-            this.props.addVariable(this.props.data.decisionVariables.length);
+            this.props.addVariable(vars.length);
         }
         return (
             <div className="DecisionTableCreator">
@@ -42,7 +43,7 @@ class DecisionTableCreator extends React.Component<IDecisionTableCreatorProps, D
                 </div>
                 <div>
                     <ul className="searchResult-list">
-                        {this.props.data.decisionVariables.map((variable, i) =>
+                        {vars.map((variable, i) =>
                             <DecisionVariableInput
                                 key={i}
                                 variable={variable}
