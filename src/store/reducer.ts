@@ -16,7 +16,23 @@ const reducerMap = {
     },
     [EDIT_VARIABLE]: (state: DecisionTableState, action: Action<IDecisionVariable>): DecisionTableState => {
         const e = action.payload!;
-        return { ...state, decisionVariables: state.decisionVariables.map(v => v.index === e.index ? e : v) };
+        let updateMatrix = false;
+        const decisionVariables = state.decisionVariables.map(v => {
+            if (v.index === e.index) {
+                if(e.name === v.name) {
+                    updateMatrix = true;
+                }
+                return e;
+            } else {
+                return v;
+            }
+        });
+        if (!updateMatrix) {
+            return { ...state, decisionVariables };
+        }
+        const matrix = DecisionTableData.createMatrix(decisionVariables);
+        const columnsVisible = matrix[0].map(() =>true);
+        return { ...state, decisionVariables, matrix, columnsVisible };
     },
     [REMOVE_VARIABLE]: (state: DecisionTableState, action: Action<IDecisionVariable>): DecisionTableState => {
         const e = action.payload!;

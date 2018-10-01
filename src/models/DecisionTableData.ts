@@ -13,19 +13,21 @@ export class DecisionTableData {
         return count;
     }
 
-    public static createMatrix(vars: IDecisionVariable[]): IBoundary[][] {        
+    public static createMatrix(vars: IDecisionVariable[]): IBoundary[][] {
         const matrix: IBoundary[][] = [];
         const columnCount = DecisionTableData.columnCount(vars);
         let count = 0;
         vars.forEach((v, ri) => {
             const row: IBoundary[] = [];
             for (let ci = 0; ci < columnCount; ci++) {
-                const boundaryIndex = (ri === 0) ? ci % 2 : Math.floor(count/Math.pow(2, ri)) % 2;
+                const boundaryIndex = (ri === 0) ?
+                    ci % v.boundaries.length :
+                    Math.floor(count / Math.pow(2, ri)) % v.boundaries.length;
                 row.push(v.boundaries[boundaryIndex]);
                 count++;
             }
             matrix.push(row);
         });
         return matrix;
-    }    
+    }
 }

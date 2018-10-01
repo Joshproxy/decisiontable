@@ -62,15 +62,7 @@ class DecisionTable extends React.Component<IDecisionTableProps, DecisionTableSt
         }
 
         return (
-            <div className="DecisionTable">
-                <div>
-                    <button
-                        className="btn btn-lg btn-primary pull-xs-right"
-                        type="submit"
-                        value="Clear"
-                        onClick={this.props.clear}>Clear
-                </button>
-                </div>
+            <div className="DecisionTable">                
                 <div>
                     <table>
                         <tbody>

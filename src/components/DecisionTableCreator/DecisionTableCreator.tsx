@@ -38,7 +38,13 @@ class DecisionTableCreator extends React.Component<IDecisionTableCreatorProps, D
                         className="btn btn-lg btn-primary pull-xs-right"
                         type="submit"
                         value="Add"
-                        onClick={add}>Add
+                        onClick={add}>add decision variable
+                    </button>                    
+                    <button
+                        className="btn btn-lg btn-primary pull-xs-right"
+                        type="submit"
+                        value="Clear"
+                        onClick={this.props.clear}>clear all
                     </button>
                 </div>
                 <div>

@@ -26,3 +26,12 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.btn {
+  margin: .3em;
+  padding: .3em .7em;
+}
+
+label {
+  padding-left: 1em;
+}

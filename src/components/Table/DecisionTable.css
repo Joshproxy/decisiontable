@@ -1,5 +1,7 @@
 table {
   border-collapse: collapse;
+  margin: 1em;
+  margin: auto;
 }
 
 table, th, td {
@@ -8,7 +10,7 @@ table, th, td {
 }
 
 .var-label {
-  background-color: azure;
+  background-color: lightskyblue;
 }
 
 .result-row {
@@ -16,15 +18,11 @@ table, th, td {
 }
 
 .success {
-  color: green;
+  background-color: lightgreen;
 }
 
 .failure {
-  color: red;
-}
-
-.toggle-button {
-  width: 25px;
+  background-color: lightcoral;
 }
 
 .column-hidden {

@@ -10,8 +10,8 @@ export class DecisionVariableString extends DecisionVariable<string> {
     private getBoundaries() {
         const list: IBoundary[] = [];
         list.push(
-            { value: this.trueValue, outcome: true },
-            { value: "!" + this.trueValue, outcome: false }
+            { value: "'" + this.trueValue + "'", outcome: true },
+            { value: "'!" + this.trueValue + "'", outcome: false }
         );
         return list;
     };
