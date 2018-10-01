@@ -3,10 +3,11 @@ import { IBoundary } from "./IBoundary";
 import { VariableType } from "./VariableType";
 
 export class DecisionVariableBoolean extends DecisionVariable<boolean> {
-    constructor(name: string) {
-        super(name, VariableType.BOOLEAN, true);
+    constructor(index: number, name: string) {
+        super(index, name, VariableType.BOOLEAN, true);
+        this.boundaries = this.getBoundaries();
     }
-    get boundaries() {
+    private getBoundaries() {
         const list: IBoundary[] = [];
         list.push(
             { value: "T", outcome: true },

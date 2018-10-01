@@ -3,10 +3,11 @@ import { IBoundary } from "./IBoundary";
 import { VariableType } from "./VariableType";
 
 export class DecisionVariableNumber extends DecisionVariable<number> {
-    constructor(name: string, trueValue: number) {
-        super(name, VariableType.NUMBER, trueValue);
+    constructor(index: number, name: string, trueValue: number) {
+        super(index, name, VariableType.NUMBER, trueValue);
+        this.boundaries = this.getBoundaries();
     }
-    get boundaries() {
+    private getBoundaries() {
         const list: IBoundary[] = [];
         list.push(
             { value: this.trueValue.toString(), outcome: true },

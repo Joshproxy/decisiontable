@@ -1,7 +1,9 @@
 import * as React from 'react';
-import './App.css';
-
+import { Provider } from 'react-redux';
 import logo from '../../logo.svg';
+import { store } from '../../store/store';
+import DecisionTableCreator from '../DecisionTableCreator/DecisionTableCreator';
+import './App.css';
 
 class App extends React.Component {
   public render() {
@@ -14,6 +16,9 @@ class App extends React.Component {
         <p className="App-intro">
           To get started, add a variable.
         </p>
+        <Provider store={store}>
+          <DecisionTableCreator />
+        </Provider>
       </div>
     );
   }

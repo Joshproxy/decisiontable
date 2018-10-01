@@ -2,35 +2,30 @@ import { IDecisionVariable } from "./DecisionVariable";
 import { IBoundary } from "./IBoundary";
 
 export class DecisionTableData {
-    private decisionVariables: IDecisionVariable[];
 
-    public AddVariable = (variable: IDecisionVariable) => {
-        this.decisionVariables.push(variable);
+    public static variableNames(vars: IDecisionVariable[]): string[] {
+        return vars.map(v => v.name);
     }
 
-    get variableNames(): string[] {
-        return this.decisionVariables.map(v => v.name);
-    }
-
-    get columnCount(): number {
-        let count = 0;
-        this.decisionVariables.forEach(v => count = v.boundaries.length * count);
+    public static columnCount(vars: IDecisionVariable[]): number {
+        let count = 1;
+        vars.forEach(v => count = v.boundaries.length * count);
         return count;
     }
 
-    public getMatrix(): IBoundary[][] {        
+    public static createMatrix(vars: IDecisionVariable[]): IBoundary[][] {        
         const matrix: IBoundary[][] = [];
-        const columnCount = this.columnCount;
+        const columnCount = DecisionTableData.columnCount(vars);
         let count = 0;
-        this.decisionVariables.forEach((v, ri) => {
+        vars.forEach((v, ri) => {
             const row: IBoundary[] = [];
             for (let ci = 0; ci < columnCount; ci++) {
-                const boundaryIndex = (ri === 0) ? ci % 2 : Math.floor(count/(ri*2)) % 2;
+                const boundaryIndex = (ri === 0) ? ci % 2 : Math.floor(count/Math.pow(2, ri)) % 2;
                 row.push(v.boundaries[boundaryIndex]);
                 count++;
             }
             matrix.push(row);
         });
         return matrix;
-    }
+    }    
 }
