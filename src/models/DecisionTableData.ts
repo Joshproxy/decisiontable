@@ -16,26 +16,20 @@ export class DecisionTableData {
     public static createMatrix(vars: IDecisionVariable[]): IBoundary[][] {
         const matrix: IBoundary[][] = [];
         const columnCount = DecisionTableData.columnCount(vars);
-        let maxVariableBoundaryCount = 2;
-        let minVariableBoundaryCount = 4;
-        vars.forEach(v => {
-            maxVariableBoundaryCount = (maxVariableBoundaryCount < v.boundaries.length) ? 
-                v.boundaries.length : maxVariableBoundaryCount;
-            minVariableBoundaryCount = (minVariableBoundaryCount > v.boundaries.length) ? 
-                v.boundaries.length : minVariableBoundaryCount;
-        });
+        let powFactor = 1;
         let count = 0;
         vars.forEach((v, ri) => {
-            const row: IBoundary[] = [];
-            for (let ci = 0; ci < columnCount; ci++) {
-                const powFactor = (v.boundaries.length === 4) ? minVariableBoundaryCount : maxVariableBoundaryCount;
+            const row: IBoundary[] = [];            
+            for (let ci = 0; ci < columnCount; ci++) {                
                 const boundaryIndex = (ri === 0) ?
                     ci % v.boundaries.length :
-                    Math.floor(count / Math.pow(powFactor, ri)) % v.boundaries.length;
+                    Math.floor(count / powFactor) % v.boundaries.length;
                 row.push(v.boundaries[boundaryIndex]);
+                
                 count++;
-            }
+            }            
             matrix.push(row);
+            powFactor = powFactor * v.boundaries.length;
         });
         return matrix;
     }
