@@ -9,7 +9,6 @@ export interface IDecisionVariable {
     index: number;
 }
 
-export abstract class DecisionVariable<T> implements IDecisionVariable {
-    public boundaries: IBoundary[] = [];
-    constructor(public index: number, public name: string, public type: VariableType, public trueValue: T) {}
+export abstract class DecisionVariable<T> implements IDecisionVariable {    
+    constructor(public index: number, public name: string, public type: VariableType, public trueValue: T, public boundaries: IBoundary[]) {}
 }

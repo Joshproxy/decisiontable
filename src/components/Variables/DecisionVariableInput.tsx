@@ -58,22 +58,24 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
       this.setState(newState);
       variableChange(newState);
     }
-    const valueChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-      const newState = { ...this.state, trueValue: ev.target.value }
+    const valueChange = (ev: React.ChangeEvent<HTMLInputElement>) => {      
+      const newState = (this.state.type === VariableType.STRING) ? 
+      DecisionVariableString.updateValue(this.state, ev.target.value) :
+      DecisionVariableNumber.updateValue(this.state, parseInt(ev.target.value, 10));
       this.setState(newState);
       variableChange(newState);
     }
     const valueMinChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-      const trueValue = this.state.trueValue as NumberRange;
-      trueValue.min = parseInt(ev.target.value, 10);
-      const newState = { ...this.state, trueValue }
+      const min = parseInt(ev.target.value, 10);
+      if(isNaN(min)) { return; }
+      const newState = DecisionVariableNumberRange.updateMinValue(this.state, min);
       this.setState(newState);
       variableChange(newState);
     }
     const valueMaxChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-      const trueValue = this.state.trueValue as NumberRange;
-      trueValue.max = parseInt(ev.target.value, 10);
-      const newState = { ...this.state, trueValue }
+      const max = parseInt(ev.target.value, 10);
+      if(isNaN(max)) { return; }
+      const newState = DecisionVariableNumberRange.updateMaxValue(this.state, max);
       this.setState(newState);
       variableChange(newState);
     }
@@ -95,30 +97,50 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
           value={this.state.name}
           onChange={editName} />
 
-        {this.state.type !== VariableType.BOOLEAN && this.state.type !== VariableType.NUMBER_RANGE &&
-        <span>
-          <label>True value:</label>        
+        {this.state.type === VariableType.STRING &&        
+        <span>              
+          <label>True value:</label>
           <input
-            className="form-control form-control-lg"
+            className="form-control form-control-lg value-input"
             placeholder="True value"
             value={this.state.trueValue}
             onChange={valueChange}          
             />
         </span>
         }
-        {this.state.type !== VariableType.BOOLEAN && this.state.type === VariableType.NUMBER_RANGE &&
-        <span>
-          <label>Min value:</label>        
+        {this.state.type === VariableType.NUMBER &&
+        <span>      
+          <label>True value:</label>         
           <input
-            className="form-control form-control-lg"
+            className="form-control form-control-lg value-input"
             placeholder="True value"
+            type="number"
+            min="-99999999"
+            max="99999999"
+            value={this.state.trueValue}
+            onChange={valueChange}          
+            />
+        </span>
+        }
+        {this.state.type === VariableType.NUMBER_RANGE &&
+        <span>       
+          <label>True range:</label>      
+          <input
+            className="form-control form-control-lg value-input"
+            placeholder="Min value"
+            type="number"
+            min="-99999999"
+            max="99999999"
             value={(this.state.trueValue as NumberRange).min}
             onChange={valueMinChange}          
             />
-          <label>Max value:</label>        
+          -     
           <input
-            className="form-control form-control-lg"
-            placeholder="True value"
+            className="form-control form-control-lg value-input"
+            placeholder="Max value"
+            type="number"
+            min="-99999999"
+            max="99999999"
             value={(this.state.trueValue as NumberRange).max}
             onChange={valueMaxChange}          
             />
