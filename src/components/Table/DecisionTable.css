@@ -17,6 +17,14 @@ table, th, td {
   background-color: lightgray;
 }
 
+.trueValue {
+  background-color: #eeffee;
+}
+
+.falseValue {
+  background-color: #ffeeee;
+}
+
 .success {
   background-color: lightgreen;
 }

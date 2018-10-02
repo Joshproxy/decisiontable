@@ -73,7 +73,8 @@ class DecisionTable extends React.Component<IDecisionTableProps, DecisionTableSt
                                 <tr key={'r' + ri}>
                                     <td className="var-label">{this.props.data.decisionVariables[ri].name}</td>
                                     {row.map((column, ci) => {
-                                        const c = (this.props.data.columnsVisible[ci]) ? '' : 'column-hidden';
+                                        let c = (column.outcome) ? 'trueValue' : 'falseValue';
+                                        c = c + ((this.props.data.columnsVisible[ci]) ? '' : ' column-hidden');
                                         return <td key={'r' + ri + 'c' + ci} className={c}>{column.value}</td>
                                     }
                                     )}
