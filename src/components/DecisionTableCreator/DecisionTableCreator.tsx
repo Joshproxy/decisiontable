@@ -69,7 +69,7 @@ const mapStateToProps = (storeState: IAppStore): IDecisionTableCreatorStateProps
 }) as IDecisionTableCreatorStateProps;
 
 const mapDispatchToProps = (dispatch: Dispatch<DecisionTableState>): IDecisionTableCreatorDispatchProps => ({
-    addVariable: (index: number) => dispatch(addVariable(index)),
+    addVariable: (index: number) => dispatch(addVariable()),
     clear: () => dispatch(clear()),
     editVariable: (variable: IDecisionVariable) => dispatch(editVariable(variable)),
     removeVariable: (variable: IDecisionVariable) => dispatch(removeVariable(variable))

@@ -1,6 +1,5 @@
 import { createAction } from "redux-actions";
 import { IDecisionVariable } from "../models/DecisionVariable";
-import { DecisionVariableBoolean } from "../models/DecisionVariableBoolean";
 
 export const ADD_VARIABLE = "ADD_VARIABLE";
 export const CLEAR = "CLEAR";
@@ -14,9 +13,10 @@ export type EDIT_VARIABLE = typeof EDIT_VARIABLE;
 export type REMOVE_VARIABLE = typeof REMOVE_VARIABLE;
 export type TOGGLE_COLUMN = typeof TOGGLE_COLUMN;
 
-export const addVariable = createAction<IDecisionVariable, number>(
+export const addVariable = createAction<void>(
     ADD_VARIABLE,
-    (index: number) =>  new DecisionVariableBoolean(index, String.fromCharCode('A'.charCodeAt(0) + index))
+    // tslint:disable-next-line:no-empty
+    () => { }
 )
 
 export const clear = createAction<void>(
