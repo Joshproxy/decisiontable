@@ -17,10 +17,10 @@ export class DecisionVariableNumberRange extends DecisionVariable<NumberRange> {
         return list;
     };
     public static updateMinValue = (current: DecisionVariableNumberRange, newMinValue: number) => {
-        return new DecisionVariableNumberRange(current.index, current.name, newMinValue, current.trueValue.max);
+        return new DecisionVariableNumberRange(current.id, current.name, newMinValue, current.trueValue.max);
     }
     public static updateMaxValue = (current: DecisionVariableNumberRange, newMaxValue: number) => {
-        return new DecisionVariableNumberRange(current.index, current.name, current.trueValue.min, newMaxValue);
+        return new DecisionVariableNumberRange(current.id, current.name, current.trueValue.min, newMaxValue);
     }
     constructor(index: number, name: string, minValue: number = 1, maxValue: number = 999) {
         super(index, name, VariableType.NUMBER_RANGE, new NumberRange(minValue, maxValue), DecisionVariableNumberRange.getBoundaries(minValue, maxValue));

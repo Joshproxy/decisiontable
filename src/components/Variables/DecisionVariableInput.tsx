@@ -22,8 +22,7 @@ interface IDecisionVariableInputProps extends IDecisionVariableInputStateProps, 
 class DecisionVariableInput extends React.Component<IDecisionVariableInputProps, IDecisionVariable> {
 
   constructor(props: IDecisionVariableInputProps, context: any) {
-    super(props, context);
-    this.state = this.props.variable;
+    super(props, context);    
   }
 
   public render() {
@@ -31,8 +30,7 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
       this.props.editVariable(newState);
     }
     const editName = (ev: React.ChangeEvent<HTMLInputElement>) => {
-      const newState = { ...this.state, name: ev.target.value }
-      this.setState(newState);
+      const newState = { ...this.props.variable, name: ev.target.value }      
       variableChange(newState);
     }
     const typeChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
@@ -40,47 +38,43 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
       const chosenType = parseInt(ev.target.value, 10) as VariableType;
       switch (chosenType) {
         case VariableType.BOOLEAN:
-          newVariableType = new DecisionVariableBoolean(this.state.index, this.state.name);
+          newVariableType = new DecisionVariableBoolean(this.props.variable.id, this.props.variable.name);
           break;
         case VariableType.STRING:
-          newVariableType = new DecisionVariableString(this.state.index, this.state.name, '');
+          newVariableType = new DecisionVariableString(this.props.variable.id, this.props.variable.name, '');
           break;
         case VariableType.NUMBER:
-          newVariableType = new DecisionVariableNumber(this.state.index, this.state.name, 1);
+          newVariableType = new DecisionVariableNumber(this.props.variable.id, this.props.variable.name, 1);
           break;
         case VariableType.NUMBER_RANGE:
-          newVariableType = new DecisionVariableNumberRange(this.state.index, this.state.name);
+          newVariableType = new DecisionVariableNumberRange(this.props.variable.id, this.props.variable.name);
           break;
         default:
-          newVariableType = new DecisionVariableBoolean(this.state.index, this.state.name);
+          newVariableType = new DecisionVariableBoolean(this.props.variable.id, this.props.variable.name);
       }
-      const newState = { ...this.state, ...newVariableType };
-      this.setState(newState);
+      const newState = { ...this.props.variable, ...newVariableType };      
       variableChange(newState);
     }
     const valueChange = (ev: React.ChangeEvent<HTMLInputElement>) => {      
-      const newState = (this.state.type === VariableType.STRING) ? 
-      DecisionVariableString.updateValue(this.state, ev.target.value) :
-      DecisionVariableNumber.updateValue(this.state, parseInt(ev.target.value, 10));
-      this.setState(newState);
+      const newState = (this.props.variable.type === VariableType.STRING) ? 
+      DecisionVariableString.updateValue(this.props.variable, ev.target.value) :
+      DecisionVariableNumber.updateValue(this.props.variable, parseInt(ev.target.value, 10));      
       variableChange(newState);
     }
     const valueMinChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
       const min = parseInt(ev.target.value, 10);
       if(isNaN(min)) { return; }
-      const newState = DecisionVariableNumberRange.updateMinValue(this.state, min);
-      this.setState(newState);
+      const newState = DecisionVariableNumberRange.updateMinValue(this.props.variable, min);      
       variableChange(newState);
     }
     const valueMaxChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
       const max = parseInt(ev.target.value, 10);
       if(isNaN(max)) { return; }
-      const newState = DecisionVariableNumberRange.updateMaxValue(this.state, max);
-      this.setState(newState);
+      const newState = DecisionVariableNumberRange.updateMaxValue(this.props.variable, max);      
       variableChange(newState);
     }
     const remove = () => {
-      this.props.removeVariable(this.state);
+      this.props.removeVariable(this.props.variable);
     }
     const variableTypeOptions = [];
     variableTypeOptions.push(<option key={'typeOption' + VariableType.BOOLEAN} value={VariableType.BOOLEAN}>Boolean</option>);
@@ -94,21 +88,21 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
         <input
           className="form-control form-control-lg"
           placeholder="Name"
-          value={this.state.name}
+          value={this.props.variable.name}
           onChange={editName} />
 
-        {this.state.type === VariableType.STRING &&        
+        {this.props.variable.type === VariableType.STRING &&        
         <span>              
           <label>True value:</label>
           <input
             className="form-control form-control-lg value-input"
             placeholder="True value"
-            value={this.state.trueValue}
+            value={this.props.variable.trueValue}
             onChange={valueChange}          
             />
         </span>
         }
-        {this.state.type === VariableType.NUMBER &&
+        {this.props.variable.type === VariableType.NUMBER &&
         <span>      
           <label>True value:</label>         
           <input
@@ -117,12 +111,12 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
             type="number"
             min="-99999999"
             max="99999999"
-            value={this.state.trueValue}
+            value={this.props.variable.trueValue}
             onChange={valueChange}          
             />
         </span>
         }
-        {this.state.type === VariableType.NUMBER_RANGE &&
+        {this.props.variable.type === VariableType.NUMBER_RANGE &&
         <span>       
           <label>True range:</label>      
           <input
@@ -131,7 +125,7 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
             type="number"
             min="-99999999"
             max="99999999"
-            value={(this.state.trueValue as NumberRange).min}
+            value={(this.props.variable.trueValue as NumberRange).min}
             onChange={valueMinChange}          
             />
           -     
@@ -141,7 +135,7 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
             type="number"
             min="-99999999"
             max="99999999"
-            value={(this.state.trueValue as NumberRange).max}
+            value={(this.props.variable.trueValue as NumberRange).max}
             onChange={valueMaxChange}          
             />
         </span>

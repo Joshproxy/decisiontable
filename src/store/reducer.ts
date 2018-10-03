@@ -18,7 +18,7 @@ const reducerMap = {
         const e = action.payload!;
         let updateMatrix = false;
         const decisionVariables = state.decisionVariables.map(v => {
-            if (v.index === e.index) {
+            if (v.id === e.id) {
                 if(e.name === v.name) {
                     updateMatrix = true;
                 }
@@ -36,12 +36,9 @@ const reducerMap = {
     },
     [REMOVE_VARIABLE]: (state: DecisionTableState, action: Action<IDecisionVariable>): DecisionTableState => {
         const e = action.payload!;
-        const removedArray = [...state.decisionVariables];
-        removedArray.splice(e.index, 1);
-        const decisionVariables = removedArray.map((d, i) => {
-            d.index = i;
-            return d;
-        });
+        const decisionVariables = [...state.decisionVariables];
+        const removeIndex = decisionVariables.findIndex(d => d.id === e.id);
+        decisionVariables.splice(removeIndex, 1);        
         const matrix = DecisionTableData.createMatrix(decisionVariables);        
         const columnsVisible = matrix[0].map(() =>true);
         return { ...state, decisionVariables, matrix, columnsVisible };

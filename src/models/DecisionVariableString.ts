@@ -12,7 +12,7 @@ export class DecisionVariableString extends DecisionVariable<string> {
         return list;
     };
     public static updateValue = (current: DecisionVariableString, newValue: string) => {
-        return new DecisionVariableString(current.index, current.name, newValue);
+        return new DecisionVariableString(current.id, current.name, newValue);
     }
     constructor(index: number, name: string, trueValue: string) {
         super(index, name, VariableType.STRING, trueValue, DecisionVariableString.getBoundaries(trueValue));
