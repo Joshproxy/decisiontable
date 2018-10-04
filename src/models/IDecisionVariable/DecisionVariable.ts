@@ -1,5 +1,5 @@
-import { IBoundary } from './IBoundary';
-import { VariableType } from "./VariableType";
+import { IBoundary } from '../IBoundary';
+import { VariableType } from "../VariableType";
 
 export interface IDecisionVariable {
     name: string;

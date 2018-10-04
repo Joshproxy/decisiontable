@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { DecisionTableState } from '../../models/DecisionTableState';
-import { IDecisionVariable } from '../../models/DecisionVariable';
+import { IDecisionVariable } from '../../models/IDecisionVariable/DecisionVariable';
 import { VariableType } from '../../models/VariableType';
 import { addVariable, changeVariableType, clear, editVariable, removeVariable } from '../../store/actions';
 import { IAppStore } from '../../store/store';

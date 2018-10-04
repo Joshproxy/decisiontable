@@ -1,7 +1,7 @@
-import { DecisionVariable } from "./DecisionVariable";
-import { IBoundary } from "./IBoundary";
-import { NumberRange } from "./NumberRange";
-import { VariableType } from "./VariableType";
+import { IBoundary } from '../IBoundary';
+import { NumberRange } from '../NumberRange';
+import { VariableType } from '../VariableType';
+import { DecisionVariable } from './DecisionVariable';
 
 export class DecisionVariableNumberRange extends DecisionVariable<NumberRange> {
     public static getBoundaries = (min: number, max: number) => {

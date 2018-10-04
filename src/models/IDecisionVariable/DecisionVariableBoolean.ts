@@ -1,6 +1,6 @@
+import { IBoundary } from "../IBoundary";
+import { VariableType } from "../VariableType";
 import { DecisionVariable } from "./DecisionVariable";
-import { IBoundary } from "./IBoundary";
-import { VariableType } from "./VariableType";
 
 export class DecisionVariableBoolean extends DecisionVariable<boolean> {
     public static getBoundaries = () => {

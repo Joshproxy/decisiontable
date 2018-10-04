@@ -1,8 +1,8 @@
 import { Action, handleActions, ReducerMap } from 'redux-actions';
 import { DecisionTableData } from '../models/DecisionTableData';
 import { DecisionTableState } from '../models/DecisionTableState';
-import { IDecisionVariable } from '../models/DecisionVariable';
-import { DecisionVariableBoolean } from '../models/DecisionVariableBoolean';
+import { IDecisionVariable } from '../models/IDecisionVariable/DecisionVariable';
+import { DecisionVariableBoolean } from '../models/IDecisionVariable/DecisionVariableBoolean';
 import { ADD_VARIABLE, CHANGE_VARIABLE_TYPE, CLEAR, EDIT_VARIABLE, REMOVE_VARIABLE, TOGGLE_COLUMN } from './actions';
 
 const nextId = (vars : IDecisionVariable[]) => {

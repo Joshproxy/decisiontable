@@ -1,5 +1,5 @@
-import { IDecisionVariable } from "./DecisionVariable";
-import { IBoundary } from "./IBoundary";
+import { IBoundary } from './IBoundary';
+import { IDecisionVariable } from './IDecisionVariable/DecisionVariable';
 
 export class DecisionTableState {
     public decisionVariables: IDecisionVariable[];

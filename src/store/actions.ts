@@ -1,9 +1,9 @@
 import { createAction } from "redux-actions";
-import { IDecisionVariable } from "../models/DecisionVariable";
-import { DecisionVariableBoolean } from "../models/DecisionVariableBoolean";
-import { DecisionVariableNumber } from "../models/DecisionVariableNumber";
-import { DecisionVariableNumberRange } from "../models/DecisionVariableNumberRange";
-import { DecisionVariableString } from "../models/DecisionVariableString";
+import { IDecisionVariable } from "../models/IDecisionVariable/DecisionVariable";
+import { DecisionVariableBoolean } from "../models/IDecisionVariable/DecisionVariableBoolean";
+import { DecisionVariableNumber } from "../models/IDecisionVariable/DecisionVariableNumber";
+import { DecisionVariableNumberRange } from "../models/IDecisionVariable/DecisionVariableNumberRange";
+import { DecisionVariableString } from "../models/IDecisionVariable/DecisionVariableString";
 import { VariableType } from "../models/VariableType";
 
 export const ADD_VARIABLE = "ADD_VARIABLE";
