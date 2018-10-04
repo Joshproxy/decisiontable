@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { DecisionTableState } from '../../models/DecisionTableState';
 import { IDecisionVariable } from '../../models/DecisionVariable';
-import { addVariable, clear, editVariable, removeVariable } from '../../store/actions';
+import { VariableType } from '../../models/VariableType';
+import { addVariable, changeVariableType, clear, editVariable, removeVariable } from '../../store/actions';
 import { IAppStore } from '../../store/store';
 import DecisionTable from '../Table/DecisionTable';
 import DecisionVariableInput from '../Variables/DecisionVariableInput';
@@ -13,10 +14,11 @@ interface IDecisionTableCreatorStateProps {
 }
 
 interface IDecisionTableCreatorDispatchProps {
-    addVariable: (index: number) => void;
+    addVariable: () => void;
     clear: () => void;
     editVariable: (variable: IDecisionVariable) => void;
     removeVariable: (variable: IDecisionVariable) => void;
+    changeVariableType: (variable: IDecisionVariable, newType: VariableType) => void;
 }
 
 interface IDecisionTableCreatorProps extends IDecisionTableCreatorStateProps, IDecisionTableCreatorDispatchProps { }
@@ -28,7 +30,7 @@ class DecisionTableCreator extends React.Component<IDecisionTableCreatorProps, D
 
     public render() {
         const add = () => {
-            this.props.addVariable(this.props.data.decisionVariables.length);
+            this.props.addVariable();
         }
         return (
             <div className="DecisionTableCreator">
@@ -54,7 +56,8 @@ class DecisionTableCreator extends React.Component<IDecisionTableCreatorProps, D
                                 variable={variable}
                                 editable={true}
                                 editVariable={this.props.editVariable}
-                                removeVariable={this.props.removeVariable} />
+                                removeVariable={this.props.removeVariable}
+                                changeVariableType={this.props.changeVariableType} />
                         )}
                     </ul>
                 </div>
@@ -69,10 +72,11 @@ const mapStateToProps = (storeState: IAppStore): IDecisionTableCreatorStateProps
 }) as IDecisionTableCreatorStateProps;
 
 const mapDispatchToProps = (dispatch: Dispatch<DecisionTableState>): IDecisionTableCreatorDispatchProps => ({
-    addVariable: (index: number) => dispatch(addVariable()),
+    addVariable: () => dispatch(addVariable()),
+    changeVariableType: (variable: IDecisionVariable, newType: VariableType) => dispatch(changeVariableType(variable, newType)),
     clear: () => dispatch(clear()),
     editVariable: (variable: IDecisionVariable) => dispatch(editVariable(variable)),
-    removeVariable: (variable: IDecisionVariable) => dispatch(removeVariable(variable))
+    removeVariable: (variable: IDecisionVariable) => dispatch(removeVariable(variable))    
 }) as IDecisionTableCreatorDispatchProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(DecisionTableCreator);

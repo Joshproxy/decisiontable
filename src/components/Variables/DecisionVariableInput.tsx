@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { IDecisionVariable } from '../../models/DecisionVariable';
-import { DecisionVariableBoolean } from '../../models/DecisionVariableBoolean';
 import { DecisionVariableNumber } from '../../models/DecisionVariableNumber';
 import { DecisionVariableNumberRange } from '../../models/DecisionVariableNumberRange';
 import { DecisionVariableString } from '../../models/DecisionVariableString';
@@ -15,6 +14,7 @@ interface IDecisionVariableInputStateProps {
 interface IDecisionVariableInputDispatchProps {
   editVariable: (variable: IDecisionVariable) => void;
   removeVariable: (variable: IDecisionVariable) => void;
+  changeVariableType: (variable: IDecisionVariable, newType: VariableType) => void;
 }
 
 interface IDecisionVariableInputProps extends IDecisionVariableInputStateProps, IDecisionVariableInputDispatchProps { }
@@ -34,26 +34,8 @@ class DecisionVariableInput extends React.Component<IDecisionVariableInputProps,
       variableChange(newState);
     }
     const typeChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-      let newVariableType: IDecisionVariable;
-      const chosenType = parseInt(ev.target.value, 10) as VariableType;
-      switch (chosenType) {
-        case VariableType.BOOLEAN:
-          newVariableType = new DecisionVariableBoolean(this.props.variable.id, this.props.variable.name);
-          break;
-        case VariableType.STRING:
-          newVariableType = new DecisionVariableString(this.props.variable.id, this.props.variable.name, '');
-          break;
-        case VariableType.NUMBER:
-          newVariableType = new DecisionVariableNumber(this.props.variable.id, this.props.variable.name, 1);
-          break;
-        case VariableType.NUMBER_RANGE:
-          newVariableType = new DecisionVariableNumberRange(this.props.variable.id, this.props.variable.name);
-          break;
-        default:
-          newVariableType = new DecisionVariableBoolean(this.props.variable.id, this.props.variable.name);
-      }
-      const newState = { ...this.props.variable, ...newVariableType };      
-      variableChange(newState);
+      const newType = parseInt(ev.target.value, 10) as VariableType;
+      this.props.changeVariableType(this.props.variable, newType);      
     }
     const valueChange = (ev: React.ChangeEvent<HTMLInputElement>) => {      
       const newState = (this.props.variable.type === VariableType.STRING) ? 

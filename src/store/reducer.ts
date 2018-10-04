@@ -3,10 +3,23 @@ import { DecisionTableData } from '../models/DecisionTableData';
 import { DecisionTableState } from '../models/DecisionTableState';
 import { IDecisionVariable } from '../models/DecisionVariable';
 import { DecisionVariableBoolean } from '../models/DecisionVariableBoolean';
-import { ADD_VARIABLE, CLEAR, EDIT_VARIABLE, REMOVE_VARIABLE, TOGGLE_COLUMN } from './actions';
+import { ADD_VARIABLE, CHANGE_VARIABLE_TYPE, CLEAR, EDIT_VARIABLE, REMOVE_VARIABLE, TOGGLE_COLUMN } from './actions';
 
 const nextId = (vars : IDecisionVariable[]) => {
     return (vars.length > 0) ? vars[vars.length-1].id + 1 : 0;
+}
+
+const editVariableState = (state: DecisionTableState, editedVariable: IDecisionVariable) : DecisionTableState => {
+    const decisionVariables = state.decisionVariables.map(v => {
+        if (v.id === editedVariable.id) {
+            return editedVariable;
+        } else {
+            return v;
+        }
+    });        
+    const matrix = DecisionTableData.createMatrix(decisionVariables);
+    const columnsVisible = matrix[0].map(() =>true);
+    return { ...state, decisionVariables, matrix, columnsVisible };
 }
 
 const reducerMap = {
@@ -22,24 +35,10 @@ const reducerMap = {
         return { ...state, decisionVariables: [], matrix: [], columnsVisible: [] };
     },
     [EDIT_VARIABLE]: (state: DecisionTableState, action: Action<IDecisionVariable>): DecisionTableState => {
-        const e = action.payload!;
-        let updateMatrix = false;
-        const decisionVariables = state.decisionVariables.map(v => {
-            if (v.id === e.id) {
-                if(e.name === v.name) {
-                    updateMatrix = true;
-                }
-                return e;
-            } else {
-                return v;
-            }
-        });
-        if (!updateMatrix) {
-            return { ...state, decisionVariables };
-        }
-        const matrix = DecisionTableData.createMatrix(decisionVariables);
-        const columnsVisible = matrix[0].map(() =>true);
-        return { ...state, decisionVariables, matrix, columnsVisible };
+        return editVariableState(state, action.payload!);
+    },
+    [CHANGE_VARIABLE_TYPE]: (state: DecisionTableState, action: Action<IDecisionVariable>): DecisionTableState => {
+        return editVariableState(state, action.payload!);
     },
     [REMOVE_VARIABLE]: (state: DecisionTableState, action: Action<IDecisionVariable>): DecisionTableState => {
         const e = action.payload!;

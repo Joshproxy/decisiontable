@@ -22,7 +22,7 @@ export class DecisionVariableNumberRange extends DecisionVariable<NumberRange> {
     public static updateMaxValue = (current: DecisionVariableNumberRange, newMaxValue: number) => {
         return new DecisionVariableNumberRange(current.id, current.name, current.trueValue.min, newMaxValue);
     }
-    constructor(index: number, name: string, minValue: number = 1, maxValue: number = 999) {
+    constructor(index: number, name: string, minValue: number = 1, maxValue: number = 9) {
         super(index, name, VariableType.NUMBER_RANGE, new NumberRange(minValue, maxValue), DecisionVariableNumberRange.getBoundaries(minValue, maxValue));
     }
 }
