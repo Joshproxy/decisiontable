@@ -16,50 +16,30 @@ import {
     ADD_VARIABLE, CHANGE_VARIABLE_TYPE, CLEAR, EDIT_VARIABLE, REMOVE_VARIABLE, TOGGLE_COLUMN
 } from './actions';
 
-const nextId = (vars: IDecisionVariable[]) => {
-  return vars.length > 0 ? vars[vars.length - 1].id + 1 : 0;
-};
-
-const getBoundaryCreator = (
-  type: VariableType
-): ((trueValue: string | number | NumberRange) => IBoundary[]) => {
-  switch (type) {
-    case VariableType.STRING:
-      return DecisionVariableString.getBoundaries;
-    case VariableType.NUMBER:
-      return DecisionVariableNumber.getBoundaries;
-    case VariableType.NUMBER_RANGE:
-      return DecisionVariableNumberRange.getBoundaries;
-    default:
-      return DecisionVariableBoolean.getBoundaries;
-  }
-};
-
-const editVariableState = (
-  state: DecisionTableState,
-  editedVariable: IDecisionVariable
-): DecisionTableState => {
-  editedVariable.boundaries = getBoundaryCreator(editedVariable.type)(
-    editedVariable.trueValue
-  );
-  const decisionVariables = state.decisionVariables.map(v => {
-    if (v.id === editedVariable.id) {
-      return editedVariable;
-    } else {
-      return v;
-    }
-  });
-  const matrix = DecisionTableData.createMatrix(decisionVariables);
-  const columnsVisible = matrix[0].map(() => true);
-  return { decisionVariables, matrix, columnsVisible };
-};
-
-const reducerMap = {
-  [ADD_VARIABLE]: (
+export class StateFunctions {
+  public static editVariable = (
     state: DecisionTableState,
-    action: Action<IDecisionVariable>
+    editedVariable: IDecisionVariable
   ): DecisionTableState => {
-    const newId = nextId(state.decisionVariables);
+    editedVariable.boundaries = StateFunctions.getBoundaryCreator(
+      editedVariable.type
+    )(editedVariable.trueValue);
+    const decisionVariables = state.decisionVariables.map(v => {
+      if (v.id === editedVariable.id) {
+        return editedVariable;
+      } else {
+        return v;
+      }
+    });
+    const matrix = DecisionTableData.createMatrix(decisionVariables);
+    const columnsVisible = matrix[0].map(() => true);
+    return { ...state, decisionVariables, matrix, columnsVisible };
+  };
+
+  public static addVariable = (
+    state: DecisionTableState
+  ): DecisionTableState => {
+    const newId = StateFunctions.nextId(state.decisionVariables);
     const newVariable = new DecisionVariableBoolean(
       newId,
       String.fromCharCode("A".charCodeAt(0) + newId)
@@ -68,41 +48,85 @@ const reducerMap = {
     const matrix = DecisionTableData.createMatrix(decisionVariables);
     const columnsVisible = matrix[0].map(() => true);
     return { ...state, decisionVariables, matrix, columnsVisible };
-  },
-  [CLEAR]: (state: DecisionTableState): DecisionTableState => {
-    return { ...state, decisionVariables: [], matrix: [], columnsVisible: [] };
-  },
-  [EDIT_VARIABLE]: (
+  };
+
+  public static removeVariable = (
     state: DecisionTableState,
-    action: Action<IDecisionVariable>
-  ): DecisionTableState => {
-    return editVariableState(state, action.payload!);
-  },
-  [CHANGE_VARIABLE_TYPE]: (
-    state: DecisionTableState,
-    action: Action<IDecisionVariable>
-  ): DecisionTableState => {
-    return editVariableState(state, action.payload!);
-  },
-  [REMOVE_VARIABLE]: (
-    state: DecisionTableState,
-    action: Action<number>
-  ): DecisionTableState => {
-    const variableId = action.payload!;
+    variableId: number
+  ) => {
     const decisionVariables = [...state.decisionVariables];
     const removeIndex = decisionVariables.findIndex(d => d.id === variableId);
     decisionVariables.splice(removeIndex, 1);
     const matrix = DecisionTableData.createMatrix(decisionVariables);
     const columnsVisible = matrix.length > 0 ? matrix[0].map(() => true) : [];
     return { ...state, decisionVariables, matrix, columnsVisible };
+  };
+
+  public static clear = (state: DecisionTableState): DecisionTableState => ({
+    ...state,
+    columnsVisible: [],
+    decisionVariables: [],
+    matrix: []
+  });
+
+  public static toggleColumn = (
+    state: DecisionTableState,
+    columnIndex: number
+  ): DecisionTableState => {
+    const columnsVisible = state.columnsVisible;
+    columnsVisible[columnIndex] = !columnsVisible[columnIndex];
+    return { ...state, columnsVisible };
+  };
+
+  private static nextId = (vars: IDecisionVariable[]) => {
+    return vars.length > 0 ? vars[vars.length - 1].id + 1 : 0;
+  };
+
+  private static getBoundaryCreator = (
+    type: VariableType
+  ): ((trueValue: string | number | NumberRange) => IBoundary[]) => {
+    switch (type) {
+      case VariableType.STRING:
+        return DecisionVariableString.getBoundaries;
+      case VariableType.NUMBER:
+        return DecisionVariableNumber.getBoundaries;
+      case VariableType.NUMBER_RANGE:
+        return DecisionVariableNumberRange.getBoundaries;
+      default:
+        return DecisionVariableBoolean.getBoundaries;
+    }
+  };
+}
+const reducerMap = {
+  [ADD_VARIABLE]: (state: DecisionTableState): DecisionTableState => {
+    return StateFunctions.addVariable(state);
+  },
+  [CLEAR]: (state: DecisionTableState): DecisionTableState => {
+    return StateFunctions.clear(state);
+  },
+  [EDIT_VARIABLE]: (
+    state: DecisionTableState,
+    action: Action<IDecisionVariable>
+  ): DecisionTableState => {
+    return StateFunctions.editVariable(state, action.payload!);
+  },
+  [CHANGE_VARIABLE_TYPE]: (
+    state: DecisionTableState,
+    action: Action<IDecisionVariable>
+  ): DecisionTableState => {
+    return StateFunctions.editVariable(state, action.payload!);
+  },
+  [REMOVE_VARIABLE]: (
+    state: DecisionTableState,
+    action: Action<number>
+  ): DecisionTableState => {
+    return StateFunctions.removeVariable(state, action.payload!);
   },
   [TOGGLE_COLUMN]: (
     state: DecisionTableState,
     action: Action<number>
   ): DecisionTableState => {
-    const columnsVisible = state.columnsVisible;
-    columnsVisible[action.payload!] = !columnsVisible[action.payload!];
-    return { ...state, columnsVisible };
+    return StateFunctions.toggleColumn(state, action.payload!);
   }
 } as ReducerMap<DecisionTableState, IDecisionVariable>;
 
