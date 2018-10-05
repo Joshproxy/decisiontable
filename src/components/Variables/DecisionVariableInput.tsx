@@ -1,11 +1,7 @@
 import * as React from 'react';
 
 import { IDecisionVariable } from '../../models/IDecisionVariable/DecisionVariable';
-import { DecisionVariableNumber } from '../../models/IDecisionVariable/DecisionVariableNumber';
-import {
-    DecisionVariableNumberRange
-} from '../../models/IDecisionVariable/DecisionVariableNumberRange';
-import { DecisionVariableString } from '../../models/IDecisionVariable/DecisionVariableString';
+import { NumberRange } from '../../models/NumberRange';
 import { VariableType } from '../../models/VariableType';
 import { InputFieldNumber, InputFieldNumberRange, InputFieldString } from './InputFields';
 
@@ -15,12 +11,10 @@ interface IDecisionVariableInputStateProps {
 }
 
 interface IDecisionVariableInputDispatchProps {
-  editVariable: (variable: IDecisionVariable) => void;
-  removeVariable: (variable: IDecisionVariable) => void;
-  changeVariableType: (
-    variable: IDecisionVariable,
-    newType: VariableType
-  ) => void;
+  editName: (variableId: number, newName: string) => void;
+  editValue: (variableId: number, newValue: string | number | NumberRange) => void;
+  editType: (variableId: number, newType: VariableType) => void;
+  remove: (variableId: number) => void;
 }
 
 interface IDecisionVariableInputProps
@@ -35,46 +29,27 @@ class DecisionVariableInput extends React.Component<
     super(props, context);
   }
 
-  public render() {
-    const variableChange = (newState: IDecisionVariable) => {
-      this.props.editVariable(newState);
-    };
+  public render() {    
     const editName = (newName: string) => {
-      variableChange({ ...this.props.variable, name: newName });
+      this.props.editName(this.props.variable.id, newName);
     };
-    const typeChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-      const newType = parseInt(ev.target.value, 10) as VariableType;
-      this.props.changeVariableType(this.props.variable, newType);
+    const editType = (ev: React.ChangeEvent<HTMLSelectElement>) => {
+      const newType = (parseInt(ev.target.value, 10) as VariableType);
+      this.props.editType(this.props.variable.id, newType);
     };
-    const valueChange = (value: string | number) => {
-      const newState =
-        this.props.variable.type === VariableType.STRING
-          ? DecisionVariableString.updateValue(
-              this.props.variable,
-              value as string
-            )
-          : DecisionVariableNumber.updateValue(
-              this.props.variable,
-              value as number
-            );
-      variableChange(newState);
+    const valueChange = (newValue: string | number) => {      
+      this.props.editValue(this.props.variable.id, newValue);
     };
-    const valueMinChange = (min: number) => {      
-      const newState = DecisionVariableNumberRange.updateMinValue(
-        this.props.variable,
-        min
-      );
-      variableChange(newState);
+    const valueMinChange = (min: number) => {
+      const newRange = new NumberRange(min, (this.props.variable.trueValue as NumberRange).max);
+      this.props.editValue(this.props.variable.id, newRange);
     };
-    const valueMaxChange = (max: number) => {      
-      const newState = DecisionVariableNumberRange.updateMaxValue(
-        this.props.variable,
-        max
-      );
-      variableChange(newState);
+    const valueMaxChange = (max: number) => {
+      const newRange = new NumberRange((this.props.variable.trueValue as NumberRange).min, max);
+      this.props.editValue(this.props.variable.id, newRange);
     };
     const remove = () => {
-      this.props.removeVariable(this.props.variable);
+      this.props.remove(this.props.variable.id);
     };
 
     return (
@@ -112,7 +87,7 @@ class DecisionVariableInput extends React.Component<
         )}
 
         <label>Type:</label>
-        <select onChange={typeChange}>
+        <select onChange={editType}>
           <option
             key={"typeOption" + VariableType.BOOLEAN}
             value={VariableType.BOOLEAN}

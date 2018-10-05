@@ -1,10 +1,13 @@
-import { createAction } from "redux-actions";
-import { IDecisionVariable } from "../models/IDecisionVariable/DecisionVariable";
-import { DecisionVariableBoolean } from "../models/IDecisionVariable/DecisionVariableBoolean";
-import { DecisionVariableNumber } from "../models/IDecisionVariable/DecisionVariableNumber";
-import { DecisionVariableNumberRange } from "../models/IDecisionVariable/DecisionVariableNumberRange";
-import { DecisionVariableString } from "../models/IDecisionVariable/DecisionVariableString";
-import { VariableType } from "../models/VariableType";
+import { createAction } from 'redux-actions';
+
+import { IDecisionVariable } from '../models/IDecisionVariable/DecisionVariable';
+import { DecisionVariableBoolean } from '../models/IDecisionVariable/DecisionVariableBoolean';
+import { DecisionVariableNumber } from '../models/IDecisionVariable/DecisionVariableNumber';
+import {
+    DecisionVariableNumberRange
+} from '../models/IDecisionVariable/DecisionVariableNumberRange';
+import { DecisionVariableString } from '../models/IDecisionVariable/DecisionVariableString';
+import { VariableType } from '../models/VariableType';
 
 export const ADD_VARIABLE = "ADD_VARIABLE";
 export const CLEAR = "CLEAR";
@@ -37,9 +40,9 @@ export const editVariable = createAction<IDecisionVariable, IDecisionVariable>(
     (variable: IDecisionVariable) =>  ({ ...variable })
 )
 
-export const removeVariable = createAction<IDecisionVariable, IDecisionVariable>(
+export const removeVariable = createAction<number, number>(
     REMOVE_VARIABLE,
-    (variable: IDecisionVariable) =>  ({ ...variable })
+    (variableId: number) => variableId
 )
 
 export const toggleColumn = createAction<number, number>(
