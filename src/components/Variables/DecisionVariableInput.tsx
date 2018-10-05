@@ -39,43 +39,34 @@ class DecisionVariableInput extends React.Component<
     const variableChange = (newState: IDecisionVariable) => {
       this.props.editVariable(newState);
     };
-    const editName = (ev: React.ChangeEvent<HTMLInputElement>) => {
-      const newState = { ...this.props.variable, name: ev.target.value };
-      variableChange(newState);
+    const editName = (newName: string) => {
+      variableChange({ ...this.props.variable, name: newName });
     };
     const typeChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
       const newType = parseInt(ev.target.value, 10) as VariableType;
       this.props.changeVariableType(this.props.variable, newType);
     };
-    const valueChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const valueChange = (value: string | number) => {
       const newState =
         this.props.variable.type === VariableType.STRING
           ? DecisionVariableString.updateValue(
               this.props.variable,
-              ev.target.value
+              value as string
             )
           : DecisionVariableNumber.updateValue(
               this.props.variable,
-              parseInt(ev.target.value, 10)
+              value as number
             );
       variableChange(newState);
     };
-    const valueMinChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-      const min = parseInt(ev.target.value, 10);
-      if (isNaN(min)) {
-        return;
-      }
+    const valueMinChange = (min: number) => {      
       const newState = DecisionVariableNumberRange.updateMinValue(
         this.props.variable,
         min
       );
       variableChange(newState);
     };
-    const valueMaxChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-      const max = parseInt(ev.target.value, 10);
-      if (isNaN(max)) {
-        return;
-      }
+    const valueMaxChange = (max: number) => {      
       const newState = DecisionVariableNumberRange.updateMaxValue(
         this.props.variable,
         max
