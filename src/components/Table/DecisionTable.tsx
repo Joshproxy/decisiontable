@@ -59,17 +59,18 @@ class DecisionTable extends React.Component<
       </td>
     );
     for (let c = 0; c < this.columnCount; c++) {
-      let result = "T";
+      let result = true;
       for (let r = 0; r < this.props.data.decisionVariables.length; r++) {
         if (!matrix[r][c].outcome) {
-          result = "F";
+          result = false;
           break;
         }
       }
-      const classes = "result-row " + (result === "T" ? "success" : "failure");
+      const resultText = (result) ? this.props.data.trueResult : this.props.data.falseResult;
+      const classes = "result-row " + (result ? "success" : "failure");
       const resultColumn = this.props.data.columnsVisible[c] ? (
         <td className={classes} key={"result" + c}>
-          {result}
+          {resultText}
         </td>
       ) : (
         <td className="column-hidden" key={"result" + c} />

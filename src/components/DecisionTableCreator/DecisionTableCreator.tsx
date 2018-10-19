@@ -11,6 +11,7 @@ import * as Actions from '../../store/actions';
 import { IAppStore } from '../../store/store';
 import DecisionTable from '../Table/DecisionTable';
 import DecisionVariableInput from '../Variables/DecisionVariableInput';
+import { InputFieldString } from '../Variables/InputFields';
 
 interface IDecisionTableCreatorStateProps {
   data: DecisionTableState;
@@ -22,6 +23,8 @@ interface IDecisionTableCreatorDispatchProps {
   editVariable: (variable: IDecisionVariable) => void;
   removeVariable: (variableId: number) => void;
   toggleColumn: (columnIndex: number) => void;
+  updateTrueResult: (updatedResult: string) => void;
+  updateFalseResult: (updatedResult: string) => void;
 }
 
 interface IDecisionTableCreatorProps
@@ -65,20 +68,36 @@ class DecisionTableCreator extends React.Component<
       toggleColumn: (columnIndex: number) =>
         this.setState(
           DecisionTableStateFunctions.toggleColumn(this.state, columnIndex)
+        ),
+      updateFalseResult: (updatedResult: string) =>
+        this.setState(
+          DecisionTableStateFunctions.updateFalseResult(
+            this.state,
+            updatedResult
+          )
+        ),
+      updateTrueResult: (updatedResult: string) =>
+        this.setState(
+          DecisionTableStateFunctions.updateTrueResult(
+            this.state,
+            updatedResult
+          )
         )
     };
 
     if (useStore) {
       dispatchProps = {
-          addVariable: this.props.addVariable,
-          clear: this.props.clear,
-          editVariable: this.props.editVariable,
-          removeVariable: this.props.removeVariable,
-          toggleColumn: this.props.toggleColumn
-      }
+        addVariable: this.props.addVariable,
+        clear: this.props.clear,
+        editVariable: this.props.editVariable,
+        removeVariable: this.props.removeVariable,
+        toggleColumn: this.props.toggleColumn,
+        updateFalseResult: this.props.updateFalseResult,
+        updateTrueResult: this.props.updateTrueResult
+      };
     }
 
-    this.getState = () => (useStore) ? this.props.data : this.state;
+    this.getState = () => (useStore ? this.props.data : this.state);
 
     this.addVariable = dispatchProps.addVariable;
     this.removeVariable = dispatchProps.removeVariable;
@@ -110,7 +129,7 @@ class DecisionTableCreator extends React.Component<
         this.getState(),
         variableId,
         (variable: IDecisionVariable) => {
-            dispatchProps.editVariable(
+          dispatchProps.editVariable(
             DecisionTableStateFunctions.changeVariableType(variable, newType)
           );
         }
@@ -124,6 +143,21 @@ class DecisionTableCreator extends React.Component<
     return (
       <div className="DecisionTableCreator">
         <div>
+          <div>
+            <InputFieldString
+              label="Pass Result:"
+              value={this.props.data.trueResult}
+              placholder="Result when true"
+              onChange={this.props.updateTrueResult}
+            />
+            <br />
+            <InputFieldString
+              label="Fail Result:"
+              value={this.props.data.falseResult}
+              placholder="Result when false"
+              onChange={this.props.updateFalseResult}
+            />
+          </div>
           <button
             className="btn btn-lg btn-primary pull-xs-right"
             type="submit"
@@ -184,7 +218,11 @@ const mapDispatchToProps = (
     removeVariable: (variableId: number) =>
       dispatch(Actions.removeVariable(variableId)),
     toggleColumn: (columnIndex: number) =>
-      dispatch(Actions.toggleColumn(columnIndex))
+      dispatch(Actions.toggleColumn(columnIndex)),
+    updateFalseResult: (updatedResult: string) =>
+      dispatch(Actions.updateFalseResult(updatedResult)),
+    updateTrueResult: (updatedResult: string) =>
+      dispatch(Actions.updateTrueResult(updatedResult))
   } as IDecisionTableCreatorDispatchProps);
 
 export default connect(

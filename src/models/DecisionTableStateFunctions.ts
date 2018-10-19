@@ -124,6 +124,20 @@ export class DecisionTableStateFunctions {
     }
   };
 
+  public static updateTrueResult = (
+    state: DecisionTableState,
+    updatedResult: string
+  ): DecisionTableState => {
+    return { ...state, trueResult: updatedResult };
+  };
+
+  public static updateFalseResult = (
+    state: DecisionTableState,
+    updatedResult: string
+  ): DecisionTableState => {
+    return { ...state, falseResult: updatedResult };
+  };
+
   private static nextId = (vars: IDecisionVariable[]) => {
     return vars.length > 0 ? vars[vars.length - 1].id + 1 : 0;
   };
