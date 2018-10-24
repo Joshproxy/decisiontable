@@ -11,7 +11,18 @@ const reducerMap = combineReducerMaps([
     (
       state: DecisionTableState,
       action: Action<DecisionTableState>
-    ): DecisionTableState => ({ ...action.payload! })
+    ): DecisionTableState => ({ ...state, ...action.payload! }),
+    (
+      state: DecisionTableState
+    ): DecisionTableState => ({ ...state }),
+    (
+      state: DecisionTableState,
+      action: Action<any>
+    ): DecisionTableState => {
+      // tslint:disable-next-line:no-console
+      console.error(action.payload!);
+       return { ...state} 
+     }     
   ),
   Actions.addVariable.createReducerMap(
     (state: DecisionTableState): DecisionTableState => {
