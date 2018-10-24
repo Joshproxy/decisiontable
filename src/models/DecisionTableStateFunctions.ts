@@ -16,7 +16,11 @@ export class DecisionTableStateFunctions {
         resolve,
         2000,
         DecisionTableStateFunctions.addVariable(
-          DecisionTableStateFunctions.addVariable({...(new DecisionTableState()), trueResult: 'Passed', falseResult: "Rejected" })
+          DecisionTableStateFunctions.addVariable({
+            ...new DecisionTableState(),
+            falseResult: "Rejected",
+            trueResult: "Passed"            
+          })
         )
       )
     );
@@ -31,7 +35,12 @@ export class DecisionTableStateFunctions {
     )(editedVariable.trueValue);
     const decisionVariables = state.decisionVariables.map(v => {
       if (v.id === editedVariable.id) {
-        return editedVariable;
+        return v.type === editedVariable.type
+          ? editedVariable
+          : DecisionTableStateFunctions.changeVariableType(
+              editedVariable,
+              editedVariable.type
+            );
       } else {
         return v;
       }

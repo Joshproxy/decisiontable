@@ -3,8 +3,6 @@ import * as React from 'react';
 import { DecisionTableState } from '../../models/DecisionTableState';
 import { DecisionTableStateFunctions } from '../../models/DecisionTableStateFunctions';
 import { IDecisionVariable } from '../../models/IDecisionVariable/DecisionVariable';
-import { NumberRange } from '../../models/NumberRange';
-import { VariableType } from '../../models/VariableType';
 import DecisionTable from '../Table/DecisionTable';
 import DecisionVariableInput from '../Variables/DecisionVariableInput';
 import { InputFieldString } from '../Variables/InputFields';
@@ -16,12 +14,7 @@ class DecisionTableCreator_NoStore extends React.Component<
 > {
   private addVariable: () => void;
   private removeVariable: (variableId: number) => void;
-  private editVariableName: (variableId: number, newName: string) => void;
-  private editVariableValue: (
-    variableId: number,
-    newValue: string | number | NumberRange
-  ) => void;
-  private editVariableType: (variableId: number, newType: VariableType) => void;
+  private editVariable: (variable: IDecisionVariable) => void;
   private toggleColumn: (columnIndex: number) => void;
   private updateTrueResult: (updatedResult: string) => void;
   private updateFalseResult: (updatedResult: string) => void;
@@ -38,47 +31,11 @@ class DecisionTableCreator_NoStore extends React.Component<
       this.setState(
         DecisionTableStateFunctions.removeVariable(this.state, variableId)
       );
-    this.editVariableName = (variableId: number, newName: string) => {
-      DecisionTableStateFunctions.runIfVariable(
-        this.state,
-        variableId,
-        (variable: IDecisionVariable) => {
-          variable.name = newName;
-          this.setState(
-            DecisionTableStateFunctions.editVariable(this.state, variable)
-          );
-        }
+    this.editVariable = (variable: IDecisionVariable) => {
+      this.setState(
+        DecisionTableStateFunctions.editVariable(this.state, variable)
       );
-    };
-    this.editVariableValue = (
-      variableId: number,
-      newValue: string | number | NumberRange
-    ) => {
-      DecisionTableStateFunctions.runIfVariable(
-        this.state,
-        variableId,
-        (variable: IDecisionVariable) => {
-          variable.trueValue = newValue;
-          this.setState(
-            DecisionTableStateFunctions.editVariable(this.state, variable)
-          );
-        }
-      );
-    };
-    this.editVariableType = (variableId: number, newType: VariableType) => {
-      DecisionTableStateFunctions.runIfVariable(
-        this.state,
-        variableId,
-        (variable: IDecisionVariable) => {
-          this.setState(
-            DecisionTableStateFunctions.editVariable(
-              this.state,
-              DecisionTableStateFunctions.changeVariableType(variable, newType)
-            )
-          );
-        }
-      );
-    };
+    };    
     this.toggleColumn = (columnIndex: number) =>
       this.setState(
         DecisionTableStateFunctions.toggleColumn(this.state, columnIndex)
@@ -140,10 +97,8 @@ class DecisionTableCreator_NoStore extends React.Component<
                 key={variable.id}
                 variable={variable}
                 editable={true}
-                editName={this.editVariableName}
-                editValue={this.editVariableValue}
+                edit={this.editVariable}
                 remove={this.removeVariable}
-                editType={this.editVariableType}
               />
             ))}
           </ul>

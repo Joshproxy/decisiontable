@@ -11,9 +11,7 @@ interface IDecisionVariableInputStateProps {
 }
 
 interface IDecisionVariableInputDispatchProps {
-  editName: (variableId: number, newName: string) => void;
-  editValue: (variableId: number, newValue: string | number | NumberRange) => void;
-  editType: (variableId: number, newType: VariableType) => void;
+  edit: (editedVariable: IDecisionVariable) => void;
   remove: (variableId: number) => void;
 }
 
@@ -30,23 +28,23 @@ class DecisionVariableInput extends React.Component<
   }
 
   public render() {    
-    const editName = (newName: string) => {
-      this.props.editName(this.props.variable.id, newName);
+    const editName = (newName: string) => {      
+      this.props.edit({...this.props.variable, name: newName});
     };
     const editType = (ev: React.ChangeEvent<HTMLSelectElement>) => {
       const newType = (parseInt(ev.target.value, 10) as VariableType);
-      this.props.editType(this.props.variable.id, newType);
+      this.props.edit({...this.props.variable, type: newType});
     };
     const valueChange = (newValue: string | number) => {      
-      this.props.editValue(this.props.variable.id, newValue);
+      this.props.edit({...this.props.variable, trueValue: newValue});
     };
     const valueMinChange = (min: number) => {
       const newRange = new NumberRange(min, (this.props.variable.trueValue as NumberRange).max);
-      this.props.editValue(this.props.variable.id, newRange);
+      this.props.edit({...this.props.variable, trueValue: newRange});
     };
     const valueMaxChange = (max: number) => {
       const newRange = new NumberRange((this.props.variable.trueValue as NumberRange).min, max);
-      this.props.editValue(this.props.variable.id, newRange);
+      this.props.edit({...this.props.variable, trueValue: newRange});
     };
     const remove = () => {
       this.props.remove(this.props.variable.id);

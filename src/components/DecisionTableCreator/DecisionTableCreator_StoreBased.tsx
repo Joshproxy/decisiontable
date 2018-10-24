@@ -3,10 +3,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import { DecisionTableState } from '../../models/DecisionTableState';
-import { DecisionTableStateFunctions } from '../../models/DecisionTableStateFunctions';
 import { IDecisionVariable } from '../../models/IDecisionVariable/DecisionVariable';
-import { NumberRange } from '../../models/NumberRange';
-import { VariableType } from '../../models/VariableType';
 import * as Actions from '../../store/actions';
 import { IAppStore } from '../../store/store';
 import DecisionTable from '../Table/DecisionTable';
@@ -37,58 +34,8 @@ class DecisionTableCreator_StoreBased extends React.Component<
   IDecisionTableCreatorProps,
   DecisionTableState
 > {
-  private addVariable: () => void;
-  private removeVariable: (variableId: number) => void;
-  private editVariableName: (variableId: number, newName: string) => void;
-  private editVariableValue: (
-    variableId: number,
-    newValue: string | number | NumberRange
-  ) => void;
-  private editVariableType: (variableId: number, newType: VariableType) => void;
-  private toggleColumn: (columnIndex: number) => void;
-  private clear: () => void;
-
   constructor(props: IDecisionTableCreatorProps, context: any) {
     super(props, context);
-    
-    this.addVariable = this.props.addVariable;
-    this.removeVariable = this.props.removeVariable;
-    this.editVariableName = (variableId: number, newName: string) => {
-      DecisionTableStateFunctions.runIfVariable(
-        this.props.data,
-        variableId,
-        (variable: IDecisionVariable) => {
-          variable.name = newName;
-          this.props.editVariable(variable);
-        }
-      );
-    };
-    this.editVariableValue = (
-      variableId: number,
-      newValue: string | number | NumberRange
-    ) => {
-      DecisionTableStateFunctions.runIfVariable(
-        this.props.data,
-        variableId,
-        (variable: IDecisionVariable) => {
-          variable.trueValue = newValue;
-          this.props.editVariable(variable);
-        }
-      );
-    };
-    this.editVariableType = (variableId: number, newType: VariableType) => {
-      DecisionTableStateFunctions.runIfVariable(
-        this.props.data,
-        variableId,
-        (variable: IDecisionVariable) => {
-          this.props.editVariable(
-            DecisionTableStateFunctions.changeVariableType(variable, newType)
-          );
-        }
-      );
-    };
-    this.toggleColumn = this.props.toggleColumn;
-    this.clear = this.props.clear;
     this.props.initialLoad();
   }
 
@@ -115,7 +62,7 @@ class DecisionTableCreator_StoreBased extends React.Component<
             className="btn btn-lg btn-primary pull-xs-right"
             type="submit"
             value="Add"
-            onClick={this.addVariable}
+            onClick={this.props.addVariable}
           >
             add decision variable
           </button>
@@ -123,7 +70,7 @@ class DecisionTableCreator_StoreBased extends React.Component<
             className="btn btn-lg btn-primary pull-xs-right"
             type="submit"
             value="Clear"
-            onClick={this.clear}
+            onClick={this.props.clear}
           >
             clear all
           </button>
@@ -135,18 +82,16 @@ class DecisionTableCreator_StoreBased extends React.Component<
                 key={variable.id}
                 variable={variable}
                 editable={true}
-                editName={this.editVariableName}
-                editValue={this.editVariableValue}
-                remove={this.removeVariable}
-                editType={this.editVariableType}
+                edit={this.props.editVariable}
+                remove={this.props.removeVariable}
               />
             ))}
           </ul>
         </div>
         <DecisionTable
           data={this.props.data}
-          clear={this.clear}
-          toggleColumn={this.toggleColumn}
+          clear={this.props.clear}
+          toggleColumn={this.props.toggleColumn}
         />
       </div>
     );
