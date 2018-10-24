@@ -7,6 +7,12 @@ import * as Actions from './actions';
 import { combineReducerMaps } from './common/reducer';
 
 const reducerMap = combineReducerMaps([
+  Actions.initialLoad.createReducerMap(
+    (
+      state: DecisionTableState,
+      action: Action<DecisionTableState>
+    ): DecisionTableState => ({ ...action.payload! })
+  ),
   Actions.addVariable.createReducerMap(
     (state: DecisionTableState): DecisionTableState => {
       return DecisionTableStateFunctions.addVariable(state);
@@ -23,13 +29,6 @@ const reducerMap = combineReducerMaps([
       action: Action<IDecisionVariable>
     ): DecisionTableState => {
       return DecisionTableStateFunctions.editVariable(state, action.payload!);
-    }
-  ),
-  Actions.initialLoad.createReducerMap(    
-    (): DecisionTableState => {
-      return DecisionTableStateFunctions.addVariable(
-        DecisionTableStateFunctions.addVariable(new DecisionTableState())
-      );
     }
   ),
   Actions.removeVariable.createReducerMap(
@@ -60,7 +59,7 @@ const reducerMap = combineReducerMaps([
   )
 ]);
 
-const reducer = handleActions<DecisionTableState, IDecisionVariable>(
+const reducer = handleActions<DecisionTableState, DecisionTableState>(
   reducerMap,
   new DecisionTableState()
 );

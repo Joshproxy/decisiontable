@@ -14,9 +14,9 @@ export class DecisionTableStateFunctions {
     return new Promise<DecisionTableState>(resolve =>
       setTimeout(
         resolve,
-        3000,
+        2000,
         DecisionTableStateFunctions.addVariable(
-          DecisionTableStateFunctions.addVariable(new DecisionTableState())
+          DecisionTableStateFunctions.addVariable({...(new DecisionTableState()), trueResult: 'Passed', falseResult: "Rejected" })
         )
       )
     );

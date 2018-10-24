@@ -144,6 +144,7 @@ class DecisionTableCreator extends React.Component<
     };
     this.toggleColumn = dispatchProps.toggleColumn;
     this.clear = dispatchProps.clear;
+    dispatchProps.initialLoad();
   }
 
   public render() {

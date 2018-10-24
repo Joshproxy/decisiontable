@@ -35,8 +35,8 @@ export class AsynchronousActionDefinition<Payload, U extends any[]> implements I
 
   public createReducerMap<State>(
     fulfilledReducer: Reducer<State, Payload>,
-    pendingReducer: Reducer<State, Payload> = () => ({} as State),    
-    rejectedReducer: Reducer<State, Payload> = () => ({} as State)
+    pendingReducer: Reducer<State, Payload> = (state: State) => state,    
+    rejectedReducer: Reducer<State, Payload> = (state: State) => state
   ): ReducerMap<State, Payload> {
     return {
       [this.pendingType]: pendingReducer,

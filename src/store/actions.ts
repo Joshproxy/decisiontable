@@ -1,3 +1,5 @@
+import { DecisionTableStateFunctions } from 'src/models/DecisionTableStateFunctions';
+
 import { IDecisionVariable } from '../models/IDecisionVariable/DecisionVariable';
 import { AsynchronousActionDefinition } from './common/AsynchronousActionDefinition';
 import { SynchronousActionDefinition } from './common/SynchronousActionDefinition';
@@ -13,8 +15,7 @@ const UPDATE_FALSE_RESULT = "UPDATE_FALSE_RESULT";
 
 export const initialLoad = new AsynchronousActionDefinition(
   INITIAL_LOAD,
-  () =>
-    new Promise<boolean>(resolve => setTimeout(resolve, 3000, true))
+  () => DecisionTableStateFunctions.loadData()
 );
 
 // tslint:disable-next-line:no-empty
