@@ -21,6 +21,7 @@ interface IDecisionTableCreatorDispatchProps {
   addVariable: () => void;
   clear: () => void;
   editVariable: (variable: IDecisionVariable) => void;
+  initialLoad: () => void;
   removeVariable: (variableId: number) => void;
   toggleColumn: (columnIndex: number) => void;
   updateTrueResult: (updatedResult: string) => void;
@@ -61,6 +62,11 @@ class DecisionTableCreator extends React.Component<
         this.setState(
           DecisionTableStateFunctions.editVariable(this.state, variable)
         ),
+      initialLoad: () => {
+        DecisionTableStateFunctions.loadData().then(state =>
+          this.setState(state)
+        );
+      },
       removeVariable: (variableId: number) =>
         this.setState(
           DecisionTableStateFunctions.removeVariable(this.state, variableId)
@@ -90,6 +96,7 @@ class DecisionTableCreator extends React.Component<
         addVariable: this.props.addVariable,
         clear: this.props.clear,
         editVariable: this.props.editVariable,
+        initialLoad: this.props.initialLoad,
         removeVariable: this.props.removeVariable,
         toggleColumn: this.props.toggleColumn,
         updateFalseResult: this.props.updateFalseResult,
@@ -211,18 +218,19 @@ const mapDispatchToProps = (
   dispatch: Dispatch<DecisionTableState>
 ): IDecisionTableCreatorDispatchProps =>
   ({
-    addVariable: () => dispatch(Actions.addVariable()),
-    clear: () => dispatch(Actions.clear()),
+    addVariable: () => dispatch(Actions.addVariable.action()),
+    clear: () => dispatch(Actions.clear.action()),
     editVariable: (variable: IDecisionVariable) =>
-      dispatch(Actions.editVariable(variable)),
+      dispatch(Actions.editVariable.action(variable)),
+    initialLoad: () => dispatch(Actions.initialLoad.action()),
     removeVariable: (variableId: number) =>
-      dispatch(Actions.removeVariable(variableId)),
+      dispatch(Actions.removeVariable.action(variableId)),
     toggleColumn: (columnIndex: number) =>
-      dispatch(Actions.toggleColumn(columnIndex)),
+      dispatch(Actions.toggleColumn.action(columnIndex)),
     updateFalseResult: (updatedResult: string) =>
-      dispatch(Actions.updateFalseResult(updatedResult)),
+      dispatch(Actions.updateFalseResult.action(updatedResult)),
     updateTrueResult: (updatedResult: string) =>
-      dispatch(Actions.updateTrueResult(updatedResult))
+      dispatch(Actions.updateTrueResult.action(updatedResult))
   } as IDecisionTableCreatorDispatchProps);
 
 export default connect(

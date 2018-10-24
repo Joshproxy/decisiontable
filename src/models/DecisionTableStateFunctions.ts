@@ -10,6 +10,18 @@ import { NumberRange } from './NumberRange';
 import { VariableType } from './VariableType';
 
 export class DecisionTableStateFunctions {
+  public static loadData = (): Promise<DecisionTableState> => {
+    return new Promise<DecisionTableState>(resolve =>
+      setTimeout(
+        resolve,
+        3000,
+        DecisionTableStateFunctions.addVariable(
+          DecisionTableStateFunctions.addVariable(new DecisionTableState())
+        )
+      )
+    );
+  };
+
   public static editVariable = (
     state: DecisionTableState,
     editedVariable: IDecisionVariable
