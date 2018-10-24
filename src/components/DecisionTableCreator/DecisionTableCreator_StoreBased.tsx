@@ -32,7 +32,8 @@ interface IDecisionTableCreatorProps
   extends IDecisionTableCreatorStateProps,
     IDecisionTableCreatorDispatchProps {}
 
-class DecisionTableCreator extends React.Component<
+// tslint:disable-next-line:class-name
+class DecisionTableCreator_StoreBased extends React.Component<
   IDecisionTableCreatorProps,
   DecisionTableState
 > {
@@ -46,75 +47,19 @@ class DecisionTableCreator extends React.Component<
   private editVariableType: (variableId: number, newType: VariableType) => void;
   private toggleColumn: (columnIndex: number) => void;
   private clear: () => void;
-  private getState: () => DecisionTableState;
 
   constructor(props: IDecisionTableCreatorProps, context: any) {
     super(props, context);
-    const useStore = true;
-
-    this.state = new DecisionTableState();
-
-    let dispatchProps: IDecisionTableCreatorDispatchProps = {
-      addVariable: () =>
-        this.setState(DecisionTableStateFunctions.addVariable(this.state)),
-      clear: () => this.setState(DecisionTableStateFunctions.clear(this.state)),
-      editVariable: (variable: IDecisionVariable) =>
-        this.setState(
-          DecisionTableStateFunctions.editVariable(this.state, variable)
-        ),
-      initialLoad: () => {
-        DecisionTableStateFunctions.loadData().then(state =>
-          this.setState(state)
-        );
-      },
-      removeVariable: (variableId: number) =>
-        this.setState(
-          DecisionTableStateFunctions.removeVariable(this.state, variableId)
-        ),
-      toggleColumn: (columnIndex: number) =>
-        this.setState(
-          DecisionTableStateFunctions.toggleColumn(this.state, columnIndex)
-        ),
-      updateFalseResult: (updatedResult: string) =>
-        this.setState(
-          DecisionTableStateFunctions.updateFalseResult(
-            this.state,
-            updatedResult
-          )
-        ),
-      updateTrueResult: (updatedResult: string) =>
-        this.setState(
-          DecisionTableStateFunctions.updateTrueResult(
-            this.state,
-            updatedResult
-          )
-        )
-    };
-
-    if (useStore) {
-      dispatchProps = {
-        addVariable: this.props.addVariable,
-        clear: this.props.clear,
-        editVariable: this.props.editVariable,
-        initialLoad: this.props.initialLoad,
-        removeVariable: this.props.removeVariable,
-        toggleColumn: this.props.toggleColumn,
-        updateFalseResult: this.props.updateFalseResult,
-        updateTrueResult: this.props.updateTrueResult
-      };
-    }
-
-    this.getState = () => (useStore ? this.props.data : this.state);
-
-    this.addVariable = dispatchProps.addVariable;
-    this.removeVariable = dispatchProps.removeVariable;
+    
+    this.addVariable = this.props.addVariable;
+    this.removeVariable = this.props.removeVariable;
     this.editVariableName = (variableId: number, newName: string) => {
       DecisionTableStateFunctions.runIfVariable(
-        this.getState(),
+        this.props.data,
         variableId,
         (variable: IDecisionVariable) => {
           variable.name = newName;
-          dispatchProps.editVariable(variable);
+          this.props.editVariable(variable);
         }
       );
     };
@@ -123,28 +68,28 @@ class DecisionTableCreator extends React.Component<
       newValue: string | number | NumberRange
     ) => {
       DecisionTableStateFunctions.runIfVariable(
-        this.getState(),
+        this.props.data,
         variableId,
         (variable: IDecisionVariable) => {
           variable.trueValue = newValue;
-          dispatchProps.editVariable(variable);
+          this.props.editVariable(variable);
         }
       );
     };
     this.editVariableType = (variableId: number, newType: VariableType) => {
       DecisionTableStateFunctions.runIfVariable(
-        this.getState(),
+        this.props.data,
         variableId,
         (variable: IDecisionVariable) => {
-          dispatchProps.editVariable(
+          this.props.editVariable(
             DecisionTableStateFunctions.changeVariableType(variable, newType)
           );
         }
       );
     };
-    this.toggleColumn = dispatchProps.toggleColumn;
-    this.clear = dispatchProps.clear;
-    dispatchProps.initialLoad();
+    this.toggleColumn = this.props.toggleColumn;
+    this.clear = this.props.clear;
+    this.props.initialLoad();
   }
 
   public render() {
@@ -185,7 +130,7 @@ class DecisionTableCreator extends React.Component<
         </div>
         <div>
           <ul className="searchResult-list">
-            {this.getState().decisionVariables.map(variable => (
+            {this.props.data.decisionVariables.map(variable => (
               <DecisionVariableInput
                 key={variable.id}
                 variable={variable}
@@ -199,7 +144,7 @@ class DecisionTableCreator extends React.Component<
           </ul>
         </div>
         <DecisionTable
-          data={this.getState()}
+          data={this.props.data}
           clear={this.clear}
           toggleColumn={this.toggleColumn}
         />
@@ -237,4 +182,4 @@ const mapDispatchToProps = (
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DecisionTableCreator);
+)(DecisionTableCreator_StoreBased);
