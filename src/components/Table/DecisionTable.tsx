@@ -2,7 +2,6 @@ import './DecisionTable.css';
 
 import * as React from 'react';
 
-import { DecisionTableData } from '../../models/DecisionTableData';
 import { DecisionTableState } from '../../models/DecisionTableState';
 
 interface IDecisionTableStateProps {
@@ -22,68 +21,35 @@ class DecisionTable extends React.Component<
   IDecisionTableProps,
   DecisionTableState
 > {
-  private columnCount = 0;
   constructor(props: IDecisionTableProps, context: any) {
     super(props, context);
   }
 
   public render() {
     const matrix = this.props.data.matrix;
-    this.columnCount = DecisionTableData.columnCount(
-      this.props.data.decisionVariables
-    );
-
-    // Build toggle column row
-    const toggleRow = [];
-    toggleRow.push(<td key="blank-cell" />);
-    for (let c = 0; c < this.columnCount; c++) {
-      const buttonText = this.props.data.columnsVisible[c] ? "-" : "+";
-      const toggleClick = () => this.props.toggleColumn(c);
-      toggleRow.push(
-        <td className="toggle-cell" key={"toggle" + c}>
-          <button
-            className="btn btn-sm btn-secondary pull-xs-right toggle-button"
-            onClick={toggleClick}
-          >
-            {buttonText}
-          </button>
-        </td>
-      );
-    }
-
-    // Build result row
-    const resultRow = [];
-    resultRow.push(
-      <td key="resultLabel" className="result-row">
-        Result
-      </td>
-    );
-    for (let c = 0; c < this.columnCount; c++) {
-      let result = true;
-      for (let r = 0; r < this.props.data.decisionVariables.length; r++) {
-        if (!matrix[r][c].outcome) {
-          result = false;
-          break;
-        }
-      }
-      const resultText = (result) ? this.props.data.trueResult : this.props.data.falseResult;
-      const classes = "result-row " + (result ? "success" : "failure");
-      const resultColumn = this.props.data.columnsVisible[c] ? (
-        <td className={classes} key={"result" + c}>
-          {resultText}
-        </td>
-      ) : (
-        <td className="column-hidden" key={"result" + c} />
-      );
-      resultRow.push(resultColumn);
-    }
-
+    
     return (
       <div className="DecisionTable">
         <div>
           <table>
             <tbody>
-              <tr>{toggleRow}</tr>
+              <tr>
+                <td />
+                {this.props.data.columnsVisible.map((columnVisible, cvi) => {
+                  const buttonText = columnVisible ? "-" : "+";
+                  const toggleClick = () => this.props.toggleColumn(cvi);
+                  return (
+                    <td className="toggle-cell" key={"toggle" + cvi}>
+                      <button
+                        className="btn btn-sm btn-secondary pull-xs-right toggle-button"
+                        onClick={toggleClick}
+                      >
+                        {buttonText}
+                      </button>
+                    </td>
+                  );
+                })}
+              </tr>
               {matrix.map((row, ri) => (
                 <tr key={"r" + ri}>
                   <td className="var-label">
@@ -104,7 +70,37 @@ class DecisionTable extends React.Component<
                   })}
                 </tr>
               ))}
-              <tr>{resultRow}</tr>
+              <tr>
+                <td key="resultLabel" className="result-row">
+                  Result
+                </td>
+                {this.props.data.columnsVisible.map((c, ci) => {
+                  let result = true;
+                  for (
+                    let r = 0;
+                    r < this.props.data.decisionVariables.length;
+                    r++
+                  ) {
+                    if (!matrix[r][ci].outcome) {
+                      result = false;
+                      break;
+                    }
+                  }
+                  const resultText = result
+                    ? this.props.data.trueResult
+                    : this.props.data.falseResult;
+                  const classes =
+                    "result-row " + (result ? "success" : "failure");
+                  const resultColumn = this.props.data.columnsVisible[ci] ? (
+                    <td className={classes} key={"result" + c}>
+                      {resultText}
+                    </td>
+                  ) : (
+                    <td className="column-hidden" key={"result" + c} />
+                  );
+                  return resultColumn;
+                })}
+              </tr>
             </tbody>
           </table>
         </div>
