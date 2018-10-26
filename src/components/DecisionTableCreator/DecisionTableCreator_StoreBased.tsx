@@ -31,8 +31,7 @@ interface IDecisionTableCreatorProps
 
 // tslint:disable-next-line:class-name
 class DecisionTableCreator_StoreBased extends React.Component<
-  IDecisionTableCreatorProps,
-  DecisionTableState
+  IDecisionTableCreatorProps
 > {
   constructor(props: IDecisionTableCreatorProps, context: any) {
     super(props, context);

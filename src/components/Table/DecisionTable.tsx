@@ -27,7 +27,7 @@ class DecisionTable extends React.Component<
 
   public render() {
     const matrix = this.props.data.matrix;
-    
+
     return (
       <div className="DecisionTable">
         <div>
@@ -89,16 +89,16 @@ class DecisionTable extends React.Component<
                   const resultText = result
                     ? this.props.data.trueResult
                     : this.props.data.falseResult;
-                  const classes =
+                  let classes =
                     "result-row " + (result ? "success" : "failure");
-                  const resultColumn = this.props.data.columnsVisible[ci] ? (
+                  if (!this.props.data.columnsVisible[ci]) {
+                    classes += " column-hidden";
+                  }
+                  return (
                     <td className={classes} key={"result" + c}>
                       {resultText}
                     </td>
-                  ) : (
-                    <td className="column-hidden" key={"result" + c} />
                   );
-                  return resultColumn;
                 })}
               </tr>
             </tbody>

@@ -25,7 +25,7 @@ export const clear = new SynchronousActionDefinition(CLEAR);
 
 export const editVariable = new SynchronousActionDefinition(
   EDIT_VARIABLE,
-  (variable: IDecisionVariable) => ({ ...variable })
+  (variable: IDecisionVariable) => variable
 );
 
 export const removeVariable = new SynchronousActionDefinition(

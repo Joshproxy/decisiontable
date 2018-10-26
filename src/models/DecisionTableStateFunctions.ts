@@ -19,7 +19,7 @@ export class DecisionTableStateFunctions {
           DecisionTableStateFunctions.addVariable({
             ...new DecisionTableState(),
             falseResult: "Rejected",
-            trueResult: "Passed"            
+            trueResult: "Passed"
           })
         )
       )
@@ -30,17 +30,19 @@ export class DecisionTableStateFunctions {
     state: DecisionTableState,
     editedVariable: IDecisionVariable
   ): DecisionTableState => {
-    editedVariable.boundaries = DecisionTableStateFunctions.getBoundaryCreator(
-      editedVariable.type
-    )(editedVariable.trueValue);
     const decisionVariables = state.decisionVariables.map(v => {
       if (v.id === editedVariable.id) {
-        return v.type === editedVariable.type
-          ? editedVariable
-          : DecisionTableStateFunctions.changeVariableType(
-              editedVariable,
-              editedVariable.type
-            );
+        editedVariable =
+          v.type === editedVariable.type
+            ? editedVariable
+            : DecisionTableStateFunctions.changeVariableType(
+                editedVariable,
+                editedVariable.type
+              );
+        editedVariable.boundaries = DecisionTableStateFunctions.getBoundaryCreator(
+          editedVariable.type
+        )(editedVariable.trueValue);
+        return editedVariable;
       } else {
         return v;
       }
