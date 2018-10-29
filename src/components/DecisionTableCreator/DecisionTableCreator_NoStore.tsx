@@ -55,6 +55,10 @@ class DecisionTableCreator_NoStore extends React.Component<
   }
 
   public render() {
+    const dataJson = DecisionTableStateFunctions.toUrlEncodedJson(
+      this.state
+    );
+    window.location.hash = dataJson;
     return (
       <div className="DecisionTableCreator">
         <div>

@@ -95,7 +95,7 @@ class DecisionTable extends React.Component<
                     classes += " column-hidden";
                   }
                   return (
-                    <td className={classes} key={"result" + c}>
+                    <td className={classes} key={"result" + ci}>
                       {resultText}
                     </td>
                   );

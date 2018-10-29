@@ -11,18 +11,28 @@ import { VariableType } from './VariableType';
 
 export class DecisionTableStateFunctions {
   public static loadData = (): Promise<DecisionTableState> => {
+    let state: DecisionTableState | null = null;
+    try {
+      state = DecisionTableStateFunctions.fromUrlEncodedJson(
+        window.location.hash.substr(1)
+      );
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error(err);
+      state = null;
+    }
+
+    if (state === null) {
+      state = DecisionTableStateFunctions.addVariable(
+        DecisionTableStateFunctions.addVariable({
+          ...new DecisionTableState(),
+          falseResult: "Rejected",
+          trueResult: "Passed"
+        })
+      );
+    }
     return new Promise<DecisionTableState>(resolve =>
-      setTimeout(
-        resolve,
-        2000,
-        DecisionTableStateFunctions.addVariable(
-          DecisionTableStateFunctions.addVariable({
-            ...new DecisionTableState(),
-            falseResult: "Rejected",
-            trueResult: "Passed"
-          })
-        )
-      )
+      setTimeout(resolve, 200, state)
     );
   };
 
@@ -159,6 +169,27 @@ export class DecisionTableStateFunctions {
     updatedResult: string
   ): DecisionTableState => {
     return { ...state, falseResult: updatedResult };
+  };
+
+  public static toJson = (state: DecisionTableState): string => {
+    const target = { ...state, matrix: [] };
+    return JSON.stringify(target);
+  };
+
+  public static fromJson = (jsonState: string): DecisionTableState | null => {
+    const state = JSON.parse(jsonState) as DecisionTableState;
+    state.matrix = DecisionTableData.createMatrix(state.decisionVariables);
+    return state.decisionVariables ? state : null;
+  };
+
+  public static toUrlEncodedJson = (state: DecisionTableState): string => {
+    return encodeURI(DecisionTableStateFunctions.toJson(state));
+  };
+
+  public static fromUrlEncodedJson = (
+    urlEncodedJsonState: string
+  ): DecisionTableState | null => {
+    return DecisionTableStateFunctions.fromJson(decodeURI(urlEncodedJsonState));
   };
 
   private static nextId = (vars: IDecisionVariable[]) => {

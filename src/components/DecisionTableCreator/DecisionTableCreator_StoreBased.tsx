@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+import { DecisionTableStateFunctions } from 'src/models/DecisionTableStateFunctions';
 
 import { DecisionTableState } from '../../models/DecisionTableState';
 import { IDecisionVariable } from '../../models/IDecisionVariable/DecisionVariable';
@@ -39,6 +40,11 @@ class DecisionTableCreator_StoreBased extends React.Component<
   }
 
   public render() {
+    const dataJson = DecisionTableStateFunctions.toUrlEncodedJson(
+      this.props.data
+    );
+    window.location.hash = dataJson;
+    
     return (
       <div className="DecisionTableCreator">
         <div>
@@ -91,7 +97,7 @@ class DecisionTableCreator_StoreBased extends React.Component<
           data={this.props.data}
           clear={this.props.clear}
           toggleColumn={this.props.toggleColumn}
-        />
+        />        
       </div>
     );
   }
