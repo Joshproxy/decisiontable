@@ -1,12 +1,12 @@
 import './App.css';
 
 import * as React from 'react';
-import { Provider } from 'react-redux';
+import { DecisionTableModel } from 'src/models/DecisionTableModel';
 
 import logo from '../../logo.svg';
-import { store } from '../../store/store';
 // import DecisionTableCreator_NoStore from '../DecisionTableCreator/DecisionTableCreator_NoStore';
-import DecisionTableCreator_StoreBased from '../DecisionTableCreator/DecisionTableCreator_StoreBased';
+// import DecisionTableCreator_StoreBased from '../DecisionTableCreator/DecisionTableCreator_StoreBased';
+import DecisionTableCreator_Mobx from '../DecisionTableCreator/DecisionTableCreator_Mobx';
 
 class App extends React.Component {
   public render() {
@@ -18,10 +18,8 @@ class App extends React.Component {
         </header>
         <p className="App-intro">
           To get started, add a variable.
-        </p>
-        <Provider store={store}>          
-          <DecisionTableCreator_StoreBased />
-        </Provider>
+        </p>          
+        <DecisionTableCreator_Mobx model={new DecisionTableModel()} />
       </div>
     );
   }

@@ -1,3 +1,5 @@
+import { computed } from 'mobx';
+
 import { IBoundary } from '../IBoundary';
 import { VariableType } from '../VariableType';
 import { DecisionVariable } from './DecisionVariable';
@@ -16,5 +18,8 @@ export class DecisionVariableString extends DecisionVariable<string> {
     }
     constructor(index: number, name: string, trueValue: string) {
         super(index, name, VariableType.STRING, trueValue, DecisionVariableString.getBoundaries(trueValue));
+    }
+    @computed get boundaries() {
+        return DecisionVariableString.getBoundaries(this.trueValue);
     }
 }

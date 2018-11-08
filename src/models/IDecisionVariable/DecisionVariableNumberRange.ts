@@ -1,3 +1,5 @@
+import { computed } from 'mobx';
+
 import { IBoundary } from '../IBoundary';
 import { NumberRange } from '../NumberRange';
 import { VariableType } from '../VariableType';
@@ -24,5 +26,8 @@ export class DecisionVariableNumberRange extends DecisionVariable<NumberRange> {
     }
     constructor(index: number, name: string, minValue: number = 1, maxValue: number = 9) {
         super(index, name, VariableType.NUMBER_RANGE, new NumberRange(minValue, maxValue), DecisionVariableNumberRange.getBoundaries(new NumberRange(minValue, maxValue)));
+    }
+    @computed get boundaries() {
+        return DecisionVariableNumberRange.getBoundaries(this.trueValue);
     }
 }

@@ -1,4 +1,3 @@
-import { DecisionTableData } from './DecisionTableData';
 import { DecisionTableState } from './DecisionTableState';
 import { IBoundary } from './IBoundary';
 import { IDecisionVariable } from './IDecisionVariable/DecisionVariable';
@@ -10,6 +9,38 @@ import { NumberRange } from './NumberRange';
 import { VariableType } from './VariableType';
 
 export class DecisionTableStateFunctions {
+
+  public static variableNames(vars: IDecisionVariable[]): string[] {
+    return vars.map(v => v.name);
+}
+
+public static columnCount(vars: IDecisionVariable[]): number {
+    let count = 1;
+    vars.forEach(v => count = v.boundaries.length * count);
+    return count;
+}
+
+public static createMatrix(vars: IDecisionVariable[]): IBoundary[][] {
+    const matrix: IBoundary[][] = [];
+    const columnCount = DecisionTableStateFunctions.columnCount(vars);
+    let powFactor = 1;
+    let count = 0;
+    vars.forEach((v, ri) => {
+        const row: IBoundary[] = [];            
+        for (let ci = 0; ci < columnCount; ci++) {                
+            const boundaryIndex = (ri === 0) ?
+                ci % v.boundaries.length :
+                Math.floor(count / powFactor) % v.boundaries.length;
+            row.push(v.boundaries[boundaryIndex]);
+            
+            count++;
+        }            
+        matrix.push(row);
+        powFactor = powFactor * v.boundaries.length;
+    });
+    return matrix;
+}
+
   public static loadData = (): Promise<DecisionTableState> => {
     let state: DecisionTableState | null = null;
     try {
@@ -57,7 +88,7 @@ export class DecisionTableStateFunctions {
         return v;
       }
     });
-    const matrix = DecisionTableData.createMatrix(decisionVariables);
+    const matrix = DecisionTableStateFunctions.createMatrix(decisionVariables);
     const columnsVisible = matrix[0].map(() => true);
     return { ...state, decisionVariables, matrix, columnsVisible };
   };
@@ -113,7 +144,7 @@ export class DecisionTableStateFunctions {
       String.fromCharCode("A".charCodeAt(0) + newId)
     );
     const decisionVariables = [...state.decisionVariables, newVariable];
-    const matrix = DecisionTableData.createMatrix(decisionVariables);
+    const matrix = DecisionTableStateFunctions.createMatrix(decisionVariables);
     const columnsVisible = matrix[0].map(() => true);
     return { ...state, decisionVariables, matrix, columnsVisible };
   };
@@ -125,7 +156,7 @@ export class DecisionTableStateFunctions {
     const decisionVariables = [...state.decisionVariables];
     const removeIndex = decisionVariables.findIndex(d => d.id === variableId);
     decisionVariables.splice(removeIndex, 1);
-    const matrix = DecisionTableData.createMatrix(decisionVariables);
+    const matrix = DecisionTableStateFunctions.createMatrix(decisionVariables);
     const columnsVisible = matrix.length > 0 ? matrix[0].map(() => true) : [];
     return { ...state, decisionVariables, matrix, columnsVisible };
   };
@@ -178,7 +209,7 @@ export class DecisionTableStateFunctions {
 
   public static fromJson = (jsonState: string): DecisionTableState | null => {
     const state = JSON.parse(jsonState) as DecisionTableState;
-    state.matrix = DecisionTableData.createMatrix(state.decisionVariables);
+    state.matrix = DecisionTableStateFunctions.createMatrix(state.decisionVariables);
     return state.decisionVariables ? state : null;
   };
 

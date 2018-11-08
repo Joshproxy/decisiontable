@@ -1,6 +1,8 @@
-import { IBoundary } from "../IBoundary";
-import { VariableType } from "../VariableType";
-import { DecisionVariable } from "./DecisionVariable";
+import { computed } from 'mobx';
+
+import { IBoundary } from '../IBoundary';
+import { VariableType } from '../VariableType';
+import { DecisionVariable } from './DecisionVariable';
 
 export class DecisionVariableBoolean extends DecisionVariable<boolean> {
     public static getBoundaries = () => {
@@ -13,5 +15,8 @@ export class DecisionVariableBoolean extends DecisionVariable<boolean> {
     };    
     constructor(index: number, name: string) {
         super(index, name, VariableType.BOOLEAN, true, DecisionVariableBoolean.getBoundaries());
+    }
+    @computed get boundaries() {
+        return DecisionVariableBoolean.getBoundaries();
     }
 }
