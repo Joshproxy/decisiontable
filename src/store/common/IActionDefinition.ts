@@ -9,5 +9,5 @@ export interface IActionDefinition<Payload, U extends any[]> {
         pending: () => IAction<undefined, undefined>;
         fulfilled: (payload: Payload) => IAction<Payload, undefined>;
         rejected: (payload: any) => IAction<any, undefined>;
-      });
+      });  
 }

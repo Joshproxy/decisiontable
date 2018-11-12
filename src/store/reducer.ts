@@ -1,74 +1,20 @@
-import { Action, handleActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 
 import { DecisionTableState } from '../models/DecisionTableState';
 import { DecisionTableStateFunctions } from '../models/DecisionTableStateFunctions';
-import { IDecisionVariable } from '../models/IDecisionVariable/DecisionVariable';
 import * as Actions from './actions';
-import { combineReducerMaps } from './common/reducer';
+import { ActionReducer } from './common/reducer';
 
-const reducerMap = combineReducerMaps([
-  Actions.initialLoad.createReducerMap(
-    (
-      state: DecisionTableState,
-      action: Action<DecisionTableState>
-    ): DecisionTableState => ({ ...state, ...action.payload! }),
-    (
-      state: DecisionTableState
-    ): DecisionTableState => ({ ...state }),
-    (
-      state: DecisionTableState,
-      action: Action<any>
-    ): DecisionTableState => {
-      // tslint:disable-next-line:no-console
-      console.error(action.payload!);
-       return { ...state} 
-     }     
-  ),
-  Actions.addVariable.createReducerMap(
-    (state: DecisionTableState): DecisionTableState => {
-      return DecisionTableStateFunctions.addVariable(state);
-    }
-  ),
-  Actions.clear.createReducerMap(
-    (state: DecisionTableState): DecisionTableState => {
-      return DecisionTableStateFunctions.clear(state);
-    }
-  ),
-  Actions.editVariable.createReducerMap(
-    (
-      state: DecisionTableState,
-      action: Action<IDecisionVariable>
-    ): DecisionTableState => {
-      return DecisionTableStateFunctions.editVariable(state, action.payload!);
-    }
-  ),
-  Actions.removeVariable.createReducerMap(
-    (state: DecisionTableState, action: Action<number>): DecisionTableState => {
-      return DecisionTableStateFunctions.removeVariable(state, action.payload!);
-    }
-  ),
-  Actions.toggleColumn.createReducerMap(
-    (state: DecisionTableState, action: Action<number>): DecisionTableState => {
-      return DecisionTableStateFunctions.toggleColumn(state, action.payload!);
-    }
-  ),
-  Actions.updateTrueResult.createReducerMap(
-    (state: DecisionTableState, action: Action<string>): DecisionTableState => {
-      return DecisionTableStateFunctions.updateTrueResult(
-        state,
-        action.payload!
-      );
-    }
-  ),
-  Actions.updateFalseResult.createReducerMap(
-    (state: DecisionTableState, action: Action<string>): DecisionTableState => {
-      return DecisionTableStateFunctions.updateFalseResult(
-        state,
-        action.payload!
-      );
-    }
-  )
-]);
+const dtf = DecisionTableStateFunctions;
+
+const reducerMap = new ActionReducer<DecisionTableState>()
+  .add(Actions.initialLoad, dtf.merge, dtf.loading, dtf.error)
+  .add(Actions.addVariable, dtf.addVariable)
+  .add(Actions.clear, dtf.clear)
+  .add(Actions.editVariable, dtf.removeVariable)
+  .add(Actions.toggleColumn, dtf.toggleColumn)
+  .add(Actions.updateTrueResult, dtf.updateTrueResult)
+  .add(Actions.updateFalseResult, dtf.updateFalseResult).reducerMap;
 
 const reducer = handleActions<DecisionTableState, DecisionTableState>(
   reducerMap,
