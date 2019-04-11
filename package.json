@@ -3,18 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "mobx": "^5.6.0",
+    "mobx-react": "^5.3.6",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts-ts": "2.17.0",
-    "redux": "^3.6.0",
     "react-redux": "^5.0.7",
+    "react-scripts-ts": "^4.0.8",
+    "redux": "^3.6.0",
     "redux-actions": "^2.6.1",
-    "redux-logger": "^3.0.6",
     "redux-devtools-extension": "^2.13.2",
+    "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^5.1.1",
-    "redux-promise-middleware-actions": "^2.1.0",
-    "mobx": "^5.6.0",
-    "mobx-react": "^5.3.6"
+    "redux-promise-middleware-actions": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -33,5 +33,11 @@
     "@types/redux-logger": "^3.0.6",
     "@types/redux-promise-middleware": "^0.0.11",
     "typescript": "^3.0.3"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
